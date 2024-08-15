@@ -5,13 +5,16 @@ import timeit
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from typing import Literal, NamedTuple, Self
+from typing import Literal, NamedTuple, Self, Sequence, Iterable
 
 from apscheduler.triggers.base import BaseTrigger
 
 CST = timezone(timedelta(hours=8), "中国标准时间")
 HG_TIME_DELTA = timedelta(hours=4)
 DEFAULT_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
+type ItemInfoLike = ItemInfo | tuple[str, int | float] | str
+type ItemInfoListLike = ItemInfoList | Iterable[ItemInfoLike] | str
 
 
 def str_to_CST_datetime(time_str: str, format: str = DEFAULT_TIME_FORMAT) -> datetime:
@@ -35,28 +38,70 @@ def _check_tag_name(tag: str) -> None:
 
 class ItemInfo(NamedTuple):
     name: str
-    amount: float = 1
+    count: int | float = 1
 
     def __str__(self) -> str:
-        return f"{self.name}×{self.amount}"
+        return f"{self.name}×{self.count}"
 
     @classmethod
     def from_str(cls, s: str) -> Self:
+        if "×" not in s:
+            return cls(s)
         name, amount = s.split("×")
-        return cls(name, float(amount))
+        try:
+            return cls(name, int(amount))
+        except ValueError:
+            return cls(name, float(amount))
 
 
-def parse_items_str(s: str) -> list[ItemInfo]:
-    return [ItemInfo.from_str(item_str) for item_str in s.split(" ")]
+class ItemInfoList(list[ItemInfo]):
+    def __new__(cls, arg: ItemInfoListLike = ()):
+        if type(arg) is cls:
+            return arg
+        else:
+            return super().__new__(cls)
 
+    def __init__(self, arg: ItemInfoListLike = ()):
+        if arg is None:
+            super().__init__()
+        elif isinstance(arg, ItemInfoList):
+            super().__init__(arg)
+        elif isinstance(arg, str):
+            super().__init__(ItemInfo.from_str(item_str) for item_str in arg.split())
+        else:
+            super().__init__(ItemInfo(*item) if isinstance(item, tuple) else ItemInfo.from_str(item) for item in arg)
 
-def format_items_str(items: list[ItemInfo]) -> str:
-    return " ".join(map(str, items))
+    def counter(self) -> defaultdict[str, int | float]:
+        counter: defaultdict[str, int | float] = defaultdict(int)
+        for item in self:
+            counter[item.name] += item.count
+        return counter
+
+    def combine(self) -> list[ItemInfo]:
+        counter = self.counter()
+        return [ItemInfo(name, amount) for name, amount in counter.items()]
+
+    def combine_in_place(self) -> None:
+        counter = self.counter()
+        self.clear()
+        self.extend(ItemInfo(name, amount) for name, amount in counter.items())
+
+    @classmethod
+    def from_str(cls, s: str) -> Self:
+        return cls(ItemInfo.from_str(item_str) for item_str in s.split())
+
+    def __str__(self) -> str:
+        if not self:
+            return f"{self.__class__.__name__}()"
+        return " ".join(map(str, self))
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({super().__repr__()})"
 
 
 @dataclass
 class ResourceItem:
-    resources: list[ItemInfo]
+    resources: ItemInfoList
     name: str
     trigger: BaseTrigger
 
@@ -78,11 +123,11 @@ class ResourceStats:
         self.tags: defaultdict[str, list[str]] = tags
 
     def add(self,
-            resources: list[ItemInfo],
+            resources: ItemInfoListLike,
             name: str,
             trigger: BaseTrigger,
             *tags: str) -> None:
-        self.resource_items.append(ResourceItem(resources, name, trigger))
+        self.resource_items.append(ResourceItem(ItemInfoList(resources), name, trigger))
         if name not in self.tags["#ALL"]:
             self.tags["#ALL"].append(name)
         for tag in tags:
@@ -98,13 +143,6 @@ class ResourceStats:
             for tag_or_name in tags_or_names:
                 if tag_or_name not in self.tags[tag]:
                     self.tags[tag].append(tag_or_name)
-
-    @staticmethod
-    def combine(items: list[ItemInfo]) -> list[ItemInfo]:
-        counter: defaultdict[str, float] = defaultdict(int)
-        for item in items:
-            counter[item.name] += item.amount
-        return [ItemInfo(name, amount) for name, amount in counter.items()]
 
     def get_names_by_tag(self,
                          tag: str,
@@ -166,7 +204,7 @@ class ResourceStats:
 
         names = self.get_names_by_filter(*tags_or_names, error_if_not_found=error_if_not_found)
 
-        result = []
+        result = ItemInfoList()
         for resource_item in self.resource_items:
             if resource_item.name not in names:
                 continue
@@ -177,18 +215,20 @@ class ResourceStats:
                 next_fire_time = trigger.get_next_fire_time(next_fire_time, next_fire_time)
 
         if combine:
-            return self.combine(result)
+            return result.combine()
         else:
             return result
 
 
 if __name__ == "__main__":
-    rs = ResourceStats()
-    rs.tags = defaultdict(list, {
-        "#ALL": ["#A", "#B"] * 10000,
-        "#A": ["#B", "#B"] * 10000,
-        "#B": ["#C", "a", "e"],
-        "#C": ["d", "e"],
-    })
+    # rs = ResourceStats()
+    # rs.tags = defaultdict(list, {
+    #     "#ALL": ["#A", "#B"] * 10000,
+    #     "#A": ["#B", "#B"] * 10000,
+    #     "#B": ["#C", "a", "e"],
+    #     "#C": ["d", "e"],
+    # })
 
-    print(rs.get_names_by_tag("#ALL"))
+    # print(rs.get_names_by_tag("#ALL"))
+    # print(repr(ItemInfoList("龙门币")))
+    print(repr(ItemInfoList(ItemInfoList("龙门币", 1))))
