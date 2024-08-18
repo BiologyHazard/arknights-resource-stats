@@ -9,20 +9,21 @@ CST = timezone(timedelta(hours=8), "中国标准时间")
 HG_TIME_DELTA = timedelta(hours=4)
 DEFAULT_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
+type DateTimeLike = datetime | str | int | float
 type ItemInfoLike = ItemInfo | tuple[str, int | float] | str
 type ItemInfoListLike = ItemInfoList | Iterable[ItemInfoLike] | str
 
 
-def str_to_CST_datetime(time_str: str, format: str = DEFAULT_TIME_FORMAT) -> datetime:
-    return datetime.strptime(time_str, format).replace(tzinfo=CST)
+def get_CST_datetime(dt: DateTimeLike, format: str = DEFAULT_TIME_FORMAT) -> datetime:
+    if isinstance(dt, (int, float)):
+        return datetime.fromtimestamp(dt, CST)
+    if isinstance(dt, str):
+        return datetime.strptime(dt, format).replace(tzinfo=CST)
+    return dt.astimezone(CST)
 
 
-def datetime_to_str(dt: datetime, timezone: timezone | None = None, format: str = DEFAULT_TIME_FORMAT) -> str:
-    return dt.astimezone(timezone).strftime(format)
-
-
-# def get_HG_time(date_str: str):
-#     return datetime.strptime(date_str, "%Y-%m-%d").replace(tzinfo=CST) + HG_TIME_DELTA
+def get_CST_time_str(dt: DateTimeLike, format: str = DEFAULT_TIME_FORMAT) -> str:
+    return get_CST_datetime(dt).strftime(format)
 
 
 def _check_tag_name(tag: str) -> None:
@@ -30,6 +31,18 @@ def _check_tag_name(tag: str) -> None:
         raise ValueError(f"Tag should start with '#': {tag!r}")
     if tag == "#ALL":
         raise ValueError(f"Tag should not be '#ALL'")
+
+
+REPLACE_DICT = {
+    "\\": r"\\",
+    "\t": r"\t",
+    "\n": r"\n",
+    "\r": r"\r",
+    "\f": r"\f",
+    "\v": r"\v",
+    " ": r"\s",
+    "×": r"\c",
+}
 
 
 class ItemInfo(NamedTuple):
@@ -45,13 +58,19 @@ class ItemInfo(NamedTuple):
         return cls(*arg)
 
     def __str__(self) -> str:
-        return f"{self.name}×{self.count}"
+        display_name = self.name
+        for k, v in REPLACE_DICT.items():
+            display_name = display_name.replace(k, v)
+        return f"{display_name}×{self.count}"
 
     @classmethod
     def from_str(cls, s: str) -> Self:
         if "×" not in s:
             return cls(s)
-        name, amount = s.split("×")
+        display_name, amount = s.split("×")
+        name = display_name
+        for k, v in REPLACE_DICT.items():
+            name = name.replace(v, k)
         try:
             return cls(name, int(amount))
         except ValueError:
@@ -194,15 +213,13 @@ class ResourceStats:
         return names
 
     def query(self,
-              start_time: datetime | str,
-              end_time: datetime | str,
+              start_time: DateTimeLike,
+              end_time: DateTimeLike,
               *tags_or_names: str,
               combine: bool = True,
               error_if_not_found: bool = True) -> list[ItemInfo]:
-        if isinstance(start_time, str):
-            start_time = str_to_CST_datetime(start_time)
-        if isinstance(end_time, str):
-            end_time = str_to_CST_datetime(end_time)
+        start_time = get_CST_datetime(start_time)
+        end_time = get_CST_datetime(end_time)
 
         names = self.get_names_by_filter(*tags_or_names, error_if_not_found=error_if_not_found)
 

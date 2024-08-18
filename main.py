@@ -9,6 +9,8 @@ from apscheduler.triggers.date import DateTrigger
 
 from models import CST, ItemInfo, ResourceStats, ItemInfoList
 from rewards.intelligence_store import add_情报凭证区
+from rewards.trials_for_navigator import add_引航者试炼_resources
+from rewards.sidestory import add_将进酒复刻_resources
 
 II = ItemInfo
 

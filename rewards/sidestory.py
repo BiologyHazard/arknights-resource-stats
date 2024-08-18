@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from apscheduler.triggers.date import DateTrigger
 
 from ..models import CST, ResourceStats
