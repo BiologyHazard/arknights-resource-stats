@@ -1,11 +1,7 @@
-# from __future__ import annotations
-
-import math
-import timeit
-from collections import Counter, defaultdict
-from dataclasses import dataclass, field
+from collections import defaultdict
+from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-from typing import Literal, NamedTuple, Self, Sequence, Iterable
+from typing import NamedTuple, Self, Iterable
 
 from apscheduler.triggers.base import BaseTrigger
 
@@ -40,6 +36,14 @@ class ItemInfo(NamedTuple):
     name: str
     count: int | float = 1
 
+    @classmethod
+    def new(cls, arg: ItemInfoLike) -> Self:
+        if isinstance(arg, cls):
+            return arg
+        if isinstance(arg, str):
+            return cls.from_str(arg)
+        return cls(*arg)
+
     def __str__(self) -> str:
         return f"{self.name}×{self.count}"
 
@@ -55,21 +59,20 @@ class ItemInfo(NamedTuple):
 
 
 class ItemInfoList(list[ItemInfo]):
-    def __new__(cls, arg: ItemInfoListLike = ()):
-        if type(arg) is cls:
+    @classmethod
+    def new(cls, arg: ItemInfoListLike) -> Self:
+        if isinstance(arg, cls):
             return arg
-        else:
-            return super().__new__(cls)
+        if isinstance(arg, str):
+            return cls.from_str(arg)
+        return cls(ItemInfo.new(item) for item in arg)
 
-    def __init__(self, arg: ItemInfoListLike = ()):
-        if arg is None:
-            super().__init__()
-        elif isinstance(arg, ItemInfoList):
-            super().__init__(arg)
-        elif isinstance(arg, str):
-            super().__init__(ItemInfo.from_str(item_str) for item_str in arg.split())
+    def append_item_info(self, *args) -> None:
+        if len(args) == 1:
+            arg, = args
+            self.append(ItemInfo.new(arg))
         else:
-            super().__init__(ItemInfo(*item) if isinstance(item, tuple) else ItemInfo.from_str(item) for item in arg)
+            self.append(ItemInfo.new(args))
 
     def counter(self) -> defaultdict[str, int | float]:
         counter: defaultdict[str, int | float] = defaultdict(int)
@@ -127,7 +130,7 @@ class ResourceStats:
             name: str,
             trigger: BaseTrigger,
             *tags: str) -> None:
-        self.resource_items.append(ResourceItem(ItemInfoList(resources), name, trigger))
+        self.resource_items.append(ResourceItem(ItemInfoList.new(resources), name, trigger))
         if name not in self.tags["#ALL"]:
             self.tags["#ALL"].append(name)
         for tag in tags:
@@ -175,7 +178,6 @@ class ResourceStats:
                 names.add(tag_or_name)
         recur_visited.remove(tag)
 
-        print(f"{tag=}, {names=}")
         return names
 
     def get_names_by_filter(self,
@@ -231,4 +233,4 @@ if __name__ == "__main__":
 
     # print(rs.get_names_by_tag("#ALL"))
     # print(repr(ItemInfoList("龙门币")))
-    print(repr(ItemInfoList(ItemInfoList("龙门币", 1))))
+    print(repr(ItemInfoList.new(ItemInfoList.new("龙门币"))))
