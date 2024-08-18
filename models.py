@@ -1,29 +1,13 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
-from typing import NamedTuple, Self, Iterable
+from typing import Iterable, NamedTuple, Self
 
 from apscheduler.triggers.base import BaseTrigger
 
-CST = timezone(timedelta(hours=8), "中国标准时间")
-HG_TIME_DELTA = timedelta(hours=4)
-DEFAULT_TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+from time_utils import DateTimeLike, get_CST_datetime
 
-type DateTimeLike = datetime | str | int | float
 type ItemInfoLike = ItemInfo | tuple[str, int | float] | str
 type ItemInfoListLike = ItemInfoList | Iterable[ItemInfoLike] | str
-
-
-def get_CST_datetime(dt: DateTimeLike, format: str = DEFAULT_TIME_FORMAT) -> datetime:
-    if isinstance(dt, (int, float)):
-        return datetime.fromtimestamp(dt, CST)
-    if isinstance(dt, str):
-        return datetime.strptime(dt, format).replace(tzinfo=CST)
-    return dt.astimezone(CST)
-
-
-def get_CST_time_str(dt: DateTimeLike, format: str = DEFAULT_TIME_FORMAT) -> str:
-    return get_CST_datetime(dt).strftime(format)
 
 
 def _check_tag_name(tag: str) -> None:
@@ -31,6 +15,11 @@ def _check_tag_name(tag: str) -> None:
         raise ValueError(f"Tag should start with '#': {tag!r}")
     if tag == "#ALL":
         raise ValueError(f"Tag should not be '#ALL'")
+
+
+def _check_name(name: str) -> None:
+    if name.startswith("#") or name.startswith("!"):
+        raise ValueError(f"ResourceItem name should not start with '#' or '!': {name!r}")
 
 
 REPLACE_DICT = {
@@ -128,8 +117,7 @@ class ResourceItem:
     trigger: BaseTrigger
 
     def __post_init__(self):
-        if self.name.startswith("#") or self.name.startswith("!"):
-            raise ValueError(f"ResourceItem name should not start with '#' or '!': {self.name!r}")
+        _check_name(self.name)
 
 
 class ResourceStats:
@@ -237,17 +225,3 @@ class ResourceStats:
             return result.combine()
         else:
             return result
-
-
-if __name__ == "__main__":
-    # rs = ResourceStats()
-    # rs.tags = defaultdict(list, {
-    #     "#ALL": ["#A", "#B"] * 10000,
-    #     "#A": ["#B", "#B"] * 10000,
-    #     "#B": ["#C", "a", "e"],
-    #     "#C": ["d", "e"],
-    # })
-
-    # print(rs.get_names_by_tag("#ALL"))
-    # print(repr(ItemInfoList("龙门币")))
-    print(repr(ItemInfoList.new(ItemInfoList.new("龙门币"))))

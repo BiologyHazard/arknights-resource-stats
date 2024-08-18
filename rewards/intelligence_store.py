@@ -1,9 +1,10 @@
 from apscheduler.triggers.date import DateTrigger
 
-from ..models import CST, ResourceStats
+from models import ResourceStats
+from time_utils import CST
 
 
-def add_情报凭证区(resource_stats: ResourceStats):
+def add_intelligence_store_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "情报凭证×-1845 "
         "合成玉×2000 龙门币×30000 高级作战记录×20 技巧概要·卷3×20 糖聚块×4 异铁块×4",
