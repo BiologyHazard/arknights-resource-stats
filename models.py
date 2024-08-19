@@ -3,8 +3,9 @@ from dataclasses import dataclass
 from typing import Iterable, NamedTuple, Self
 
 from apscheduler.triggers.base import BaseTrigger
+from apscheduler.triggers.date import DateTrigger
 
-from time_utils import DateTimeLike, get_CST_datetime
+from time_utils import CST, DateTimeLike, get_CST_datetime
 
 type ItemInfoLike = ItemInfo | tuple[str, int | float] | str
 type ItemInfoListLike = ItemInfoList | Iterable[ItemInfoLike] | str
@@ -99,6 +100,8 @@ class ItemInfoList(list[ItemInfo]):
 
     @classmethod
     def from_str(cls, s: str) -> Self:
+        if s == f"{cls.__name__}()":
+            return cls()
         return cls(ItemInfo.from_str(item_str) for item_str in s.split())
 
     def __str__(self) -> str:
@@ -135,9 +138,11 @@ class ResourceStats:
     def add(self,
             resources: ItemInfoListLike,
             name: str,
-            trigger: BaseTrigger,
+            datetime_or_trigger: DateTimeLike | BaseTrigger,
             *tags: str) -> None:
-        self.resource_items.append(ResourceItem(ItemInfoList.new(resources), name, trigger))
+        if not isinstance(datetime_or_trigger, BaseTrigger):
+            datetime_or_trigger = DateTrigger(get_CST_datetime(datetime_or_trigger), timezone=CST)
+        self.resource_items.append(ResourceItem(ItemInfoList.new(resources), name, datetime_or_trigger))
         if name not in self.tags["#ALL"]:
             self.tags["#ALL"].append(name)
         for tag in tags:

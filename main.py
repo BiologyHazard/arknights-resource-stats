@@ -4,10 +4,15 @@ from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.date import DateTrigger
 
 from models import ItemInfo, ResourceStats
-from rewards.intelligence_store import add_intelligence_store_resources
-from rewards.sidestory import add_将进酒_复刻_resources
-from rewards.trials_for_navigator import add_trails_for_navigator_resources
 from rewards.annihilation import add_annihilation_first_clear_resources
+from rewards.check_in import add_check_in_resources
+from rewards.event_mission import add_event_mission_resources
+from rewards.intelligence_store import add_intelligence_store_resources
+from rewards.login import add_login_resources
+from rewards.lucky_wall import add_lucky_wall_resources
+from rewards.reclamation_algorithm import add_reclamation_algorithm_resources
+from rewards.sidestory import add_吾导先路_复刻_resources, add_将进酒_复刻_resources, add_春分_resources, add_登临意_resources
+from rewards.trials_for_navigator import add_trials_for_navigator_resources
 from time_utils import CST
 
 II = ItemInfo
@@ -116,12 +121,35 @@ resource_stats.add(
 )
 
 # 活动
-# SideStory
+# 活动任务
+add_event_mission_resources(resource_stats)
+
 # 将进酒·复刻
 add_将进酒_复刻_resources(resource_stats)
 
+# 登临意
+add_登临意_resources(resource_stats)
+
+# 春分
+add_春分_resources(resource_stats)
+
+# 吾导先路·复刻
+add_吾导先路_复刻_resources(resource_stats)
+
+# 登录活动
+add_login_resources(resource_stats)
+
+# 签到活动
+add_check_in_resources(resource_stats)
+
+# 幸运墙活动
+add_lucky_wall_resources(resource_stats)
+
 # 引航者试炼
-add_trails_for_navigator_resources(resource_stats)
+add_trials_for_navigator_resources(resource_stats)
+
+# 生息演算
+add_reclamation_algorithm_resources(resource_stats)
 
 # 邮件
 resource_stats.add("高级作战记录×5 应急理智加强剂×1 龙门币×16888",
@@ -439,6 +467,24 @@ for date, rewards in 佩佩的礼物_rewards:
     )
 
 resource_stats.add_tag("#剿灭作战", ["#剿灭作战首次通关", "#剿灭作战每周报酬"])
+resource_stats.add_tag("#SideStory", ["SideStory首次通关", "SideStory赠送", "#SideStory商店", "SideStory物资箱"])
+resource_stats.add_tag("#故事集", [])
+resource_stats.add_tag("#登录活动", [])
+resource_stats.add_tag("#签到活动", [])
+resource_stats.add_tag("#幸运墙活动", [])
+resource_stats.add_tag("#主线活动", [])
+resource_stats.add_tag("#危机合约", [])
+resource_stats.add_tag("#愚人节活动", [])
+resource_stats.add_tag("#多维合作", [])
+resource_stats.add_tag("#联锁竞赛", [])
+resource_stats.add_tag("#引航者试炼", [])
+resource_stats.add_tag("#纷争演绎", [])
+resource_stats.add_tag("#尖灭测试作战", [])
+resource_stats.add_tag("#罗德岛促融共竞", [])
+resource_stats.add_tag("#其他游戏内限时活动", [])
+resource_stats.add_tag("#游戏内限时活动", ["#SideStory", "#故事集", "#登录活动", "#签到活动", "#幸运墙活动", "#主线活动", "#危机合约", "#愚人节活动", "#多维合作", "#联锁竞赛", "#引航者试炼", "#纷争演绎", "尖灭测试作战", "#罗德岛促融共竞", "#其他游戏内限时活动"])
+resource_stats.add_tag("#游戏内常驻玩法", ["#集成战略", "#保全派驻", "#生息演算"])
+resource_stats.add_tag("#网页活动", [])
 resource_stats.add_tag("#免费邮件", ["#停服更新", "#闪断更新", "#游戏内邮件赠送", "#兑换码免费领取"])
 resource_stats.add_tag("#森空岛签到", ["#森空岛常规签到", "#森空岛签到活动"])
 resource_stats.add_tag("#森空岛", ["#森空岛签到", "#森空岛活动"])
@@ -448,4 +494,4 @@ if __name__ == '__main__':
     result = resource_stats.query("2023-01-01 00:00:00", "2024-01-01 00:00:00", "!#森空岛活动")
     for name, count in result:
         print(f"{name}: {count}")
-    print(resource_stats.tags)
+    # print(resource_stats.tags)
