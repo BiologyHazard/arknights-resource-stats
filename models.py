@@ -2,10 +2,8 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Iterable, NamedTuple, Self
 
-from apscheduler.triggers.base import BaseTrigger
-from apscheduler.triggers.date import DateTrigger
-
-from time_utils import CST, DateTimeLike, get_CST_datetime
+from time_utils import CST, DateTimeLike, to_CST_datetime
+from triggers import DateTrigger, Trigger
 
 type ItemInfoLike = ItemInfo | tuple[str, int | float] | str
 type ItemInfoListLike = ItemInfoList | Iterable[ItemInfoLike] | str
@@ -117,7 +115,7 @@ class ItemInfoList(list[ItemInfo]):
 class ResourceItem:
     resources: ItemInfoList
     name: str
-    trigger: BaseTrigger
+    trigger: Trigger
 
     def __post_init__(self):
         _check_name(self.name)
@@ -138,10 +136,10 @@ class ResourceStats:
     def add(self,
             resources: ItemInfoListLike,
             name: str,
-            datetime_or_trigger: DateTimeLike | BaseTrigger,
+            datetime_or_trigger: DateTimeLike | Trigger,
             *tags: str) -> None:
-        if not isinstance(datetime_or_trigger, BaseTrigger):
-            datetime_or_trigger = DateTrigger(get_CST_datetime(datetime_or_trigger), timezone=CST)
+        if not isinstance(datetime_or_trigger, Trigger):
+            datetime_or_trigger = DateTrigger(to_CST_datetime(datetime_or_trigger))
         self.resource_items.append(ResourceItem(ItemInfoList.new(resources), name, datetime_or_trigger))
         if name not in self.tags["#ALL"]:
             self.tags["#ALL"].append(name)
@@ -211,8 +209,8 @@ class ResourceStats:
               *tags_or_names: str,
               combine: bool = True,
               error_if_not_found: bool = True) -> list[ItemInfo]:
-        start_time = get_CST_datetime(start_time)
-        end_time = get_CST_datetime(end_time)
+        start_time = to_CST_datetime(start_time)
+        end_time = to_CST_datetime(end_time)
 
         names = self.get_names_by_filter(*tags_or_names, error_if_not_found=error_if_not_found)
 
@@ -220,11 +218,13 @@ class ResourceStats:
         for resource_item in self.resource_items:
             if resource_item.name not in names:
                 continue
-            trigger: BaseTrigger = resource_item.trigger
-            next_fire_time = trigger.get_next_fire_time(None, start_time)
+            trigger: Trigger = resource_item.trigger
+            next_fire_time = trigger.get_next_fire_time(start_time, True)
+            print(next_fire_time)
             while next_fire_time is not None and next_fire_time < end_time:
                 result.extend(resource_item.resources)
-                next_fire_time = trigger.get_next_fire_time(next_fire_time, next_fire_time)
+                next_fire_time = trigger.get_next_fire_time(next_fire_time, False)
+                print(next_fire_time)
 
         if combine:
             return result.combine()

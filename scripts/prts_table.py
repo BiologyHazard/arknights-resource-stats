@@ -200,8 +200,9 @@ if __name__ == "__main__":
     # event_name = "将进酒2023"
     # event_name = "登临意"
     # event_name = "春分"
-    event_name = "吾导先路2023"
+    # event_name = "吾导先路2023"
     # event_name = "沙中之火"
+    event_name = "落叶逐火"
     url = get_edit_url(event_name)
     source = get_prts_source_code(url)
     # print(parse_milestone(source, "繁荣证章"))

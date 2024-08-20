@@ -5,7 +5,7 @@ from scripts.excels import (activity_table, building_data, character_table,
                             display_meta_table, item_table, replicate_table, skin_table)
 
 sys.path.append(r".")
-from time_utils import get_CST_datetime  # NOQA: E402
+from time_utils import to_CST_datetime  # NOQA: E402
 
 avatar_dict = {avatar_info["avatarId"]: avatar_info for avatar_info in display_meta_table["playerAvatarData"]["avatarList"]}
 background_dict = {background_info["bgId"]: background_info for background_info in display_meta_table["homeBackgroundData"]["homeBgDataList"]}
@@ -54,7 +54,7 @@ def get_event_name(event_id: str) -> str:
     event_type = event_basic_info["type"]
     event_name = event_basic_info["name"]
     event_start_timestamp = event_basic_info["startTime"]
-    event_start_datetime = get_CST_datetime(event_start_timestamp)
+    event_start_datetime = to_CST_datetime(event_start_timestamp)
 
     if (event_type in ("CHECKIN_ONLY", "LOGIN_ONLY")
             and (name := activity_table["homeActConfig"][event_id]["actTopBarText"])):

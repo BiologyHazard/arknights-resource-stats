@@ -1,7 +1,4 @@
-from apscheduler.triggers.combining import OrTrigger
-from apscheduler.triggers.cron import CronTrigger
-from apscheduler.triggers.date import DateTrigger
-
+from triggers import CronTrigger, DateTrigger, OrTrigger
 from models import ResourceStats
 from time_utils import CST
 
@@ -11,7 +8,7 @@ def add_lucky_wall_resources(resource_stats: ResourceStats):
         '合成玉×593.1521428571428',
         '2024-08 幸运墙登录活动',
         OrTrigger([
-            DateTrigger('2024-08-01 16:00:00', timezone=CST),
+            DateTrigger('2024-08-01 16:00:00'),
             CronTrigger(hour=4, start_date='2024-08-02 04:00:00', end_date='2024-08-15 04:00:00', timezone=CST),
         ]),
         '#幸运墙活动',

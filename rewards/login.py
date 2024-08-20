@@ -1,4 +1,4 @@
-from apscheduler.triggers.date import DateTrigger
+from triggers.date import DateTrigger
 
 from models import ResourceStats
 from time_utils import CST
