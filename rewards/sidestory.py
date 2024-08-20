@@ -1,9 +1,6 @@
-from triggers.combining import OrTrigger
-from triggers.date import DateTrigger
-
-from triggers.cron import CronTrigger
 from models import ResourceStats
 from time_utils import CST
+from triggers import CronTrigger, DateTrigger
 
 
 def add_将进酒_复刻_resources(resource_stats: ResourceStats):
@@ -83,10 +80,8 @@ def add_落叶逐火_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×20 炼金值×60",
         "落叶逐火用餐区域",
-        OrTrigger([
-            DateTrigger("2023-03-07 16:00:00+08:00"),
-            CronTrigger(hour=4, start_date="2023-03-08 04:00:00+08:00", end_date="2023-03-21 04:00:00+08:00", timezone=CST),
-        ]),
+        DateTrigger("2023-03-07 16:00:00+08:00")
+        | CronTrigger(hour=4, start_time="2023-03-08 04:00:00+08:00", end_time="2023-03-21 04:00:00+08:00", timezone=CST),
         "#落叶逐火", "#签到活动",
     )
     resource_stats.add(
@@ -121,10 +116,8 @@ def add_起源行动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "合约赏金×145 行动协议×2",
         "起源行动轮换行动地点合约任务",
-        OrTrigger([
-            DateTrigger("2023-03-21 16:00:00+08:00"),
-            CronTrigger(hour=4, start_date="2023-03-23 04:00:00+08:00", end_date="2023-04-04 04:00:00+08:00", timezone=CST),
-        ]),
+        DateTrigger("2023-03-21 16:00:00+08:00")
+        | CronTrigger(hour=4, start_time="2023-03-23 04:00:00+08:00", end_time="2023-04-04 04:00:00+08:00", timezone=CST),
         "#起源行动", "#危机合约合约任务",
     )
     resource_stats.add(

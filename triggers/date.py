@@ -11,7 +11,7 @@ class DateTrigger(Trigger):
     def __init__(self, time: DateTimeLike):
         self.time = to_aware_datetime(time)
 
-    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool = True) -> datetime | None:
+    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool) -> datetime | None:
         time = to_aware_datetime(time)
         if less_than(time, self.time, inclusive):
             return self.time

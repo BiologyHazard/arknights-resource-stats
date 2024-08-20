@@ -17,16 +17,8 @@ class Trigger(ABC):
     """
 
     @abstractmethod
-    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool = True) -> datetime | None:
-        """
-        Return the next datetime to fire on.
-
-        If no such datetime can be calculated, ``None`` is returned.
-
-        :raises MaxIterationsReached: if the trigger's internal logic has exceeded a set
-            maximum of iterations (used to detect potentially infinite loops)
-
-        """
+    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool) -> datetime | None:
+        raise NotImplementedError
 
     def iter_fire_time(self,
                        start_time: DateTimeLike,
@@ -39,7 +31,7 @@ class Trigger(ABC):
         time: datetime | None = self.get_next_fire_time(start_time, start_inclusive)
         while time is not None and (end_time is None or less_than(time, end_time, end_inclusive)):
             yield time
-            time = self.get_next_fire_time(time, inclusive=False)
+            time = self.get_next_fire_time(time, False)
 
     def get_all_fire_time(self,
                           start_time: DateTimeLike,
@@ -64,8 +56,8 @@ class OrTrigger(Trigger):
     def __repr__(self):
         return f"{self.__class__.__name__}({self.triggers!r})"
 
-    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool = True) -> datetime | None:
-        fire_times = [trigger.get_next_fire_time(time)
+    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool) -> datetime | None:
+        fire_times = [trigger.get_next_fire_time(time, inclusive)
                       for trigger in self.triggers]
         fire_times = [fire_time for fire_time in fire_times if fire_time is not None]
         if fire_times:

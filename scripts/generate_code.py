@@ -73,6 +73,66 @@ from triggers import CronTrigger, DateTrigger
 
 def add_generated_resources(resource_stats: ResourceStats):
 """.lstrip()
-    with open("rewards/generated_rewards.py", "w") as f:
+
+    with open("rewards/annihilation.py", "w", encoding="utf-8") as f:
+        start = '''
+from models import ResourceStats
+
+
+def add_annihilation_first_clear_resources(resource_stats: ResourceStats):
+    """不计理智消耗，不计合成玉报酬"""
+'''.lstrip()
         f.write(start)
-        f.write(generate_code())
+        f.write(generate_lines(annihilation_rewards()))
+
+    with open("rewards/check_in.py", "w", encoding="utf-8") as f:
+        start = '''
+from models import ResourceStats
+
+
+def add_check_in_resources(resource_stats: ResourceStats):
+'''.lstrip()
+        f.write(start)
+        f.write(generate_lines(checkin_only_rewards()))
+
+    with open("rewards/event_mission.py", "w", encoding="utf-8") as f:
+        start = '''
+from models import ResourceStats
+
+
+def add_event_mission_resources(resource_stats: ResourceStats):
+'''.lstrip()
+        f.write(start)
+        f.write(generate_lines(event_mission_rewards()))
+
+    with open("rewards/login.py", "w", encoding="utf-8") as f:
+        start = '''
+from models import ResourceStats
+
+
+def add_login_resources(resource_stats: ResourceStats):
+'''.lstrip()
+        f.write(start)
+        f.write(generate_lines(login_only_rewards()))
+
+    with open("rewards/lucky_wall.py", "w", encoding="utf-8") as f:
+        start = '''
+from models import ResourceStats
+from time_utils import CST
+from triggers import DateTrigger, CronTrigger
+
+
+def add_lucky_wall_resources(resource_stats: ResourceStats):
+'''.lstrip()
+        f.write(start)
+        f.write(generate_lines(pray_only_rewards()))
+
+    with open("rewards/trials_for_navigator.py", "w", encoding="utf-8") as f:
+        start = '''
+from models import ResourceStats
+
+
+def add_trials_for_navigator_resources(resource_stats: ResourceStats):
+'''.lstrip()
+        f.write(start)
+        f.write(generate_lines(trails_for_navigator_rewards()))

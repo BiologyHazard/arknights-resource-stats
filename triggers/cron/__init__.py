@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, tzinfo
+from typing import ClassVar
 
 from tzlocal import get_localzone
 
@@ -10,29 +11,8 @@ from .util import datetime_ceil, localize, normalize
 
 
 class CronTrigger(Trigger):
-    """
-    Triggers when current time matches all specified time constraints,
-    similarly to how the UNIX cron scheduler works.
-
-    :param int|str year: 4-digit year
-    :param int|str month: month (1-12)
-    :param int|str day: day of month (1-31)
-    :param int|str week: ISO week (1-53)
-    :param int|str day_of_week: number or name of weekday (0-6 or mon,tue,wed,thu,fri,sat,sun)
-    :param int|str hour: hour (0-23)
-    :param int|str minute: minute (0-59)
-    :param int|str second: second (0-59)
-    :param datetime|str start_date: earliest possible date/time to trigger on (inclusive)
-    :param datetime|str end_date: latest possible date/time to trigger on (inclusive)
-    :param datetime.tzinfo|str timezone: time zone to use for the date/time calculations (defaults
-        to scheduler timezone)
-    :param int|None jitter: delay the job execution by ``jitter`` seconds at most
-
-    .. note:: The first weekday is always **monday**.
-    """
-
-    FIELD_NAMES = ('year', 'month', 'day', 'week', 'day_of_week', 'hour', 'minute', 'second')
-    FIELDS_MAP = {
+    FIELD_NAMES: ClassVar[tuple[str, ...]] = ('year', 'month', 'day', 'week', 'day_of_week', 'hour', 'minute', 'second')
+    FIELDS_MAP: ClassVar[dict[str, type[BaseField]]] = {
         'year': BaseField,
         'month': MonthField,
         'week': WeekField,
@@ -43,36 +23,33 @@ class CronTrigger(Trigger):
         'second': BaseField
     }
 
-    __slots__ = 'timezone', 'start_date', 'end_date', 'fields', 'jitter'
+    __slots__ = 'timezone', 'start_time', 'end_time', 'fields'
 
     def __init__(self,
-                 year=None,
-                 month=None,
-                 day=None,
-                 week=None,
-                 day_of_week=None,
-                 hour=None,
-                 minute=None,
-                 second=None,
-                 start_date=None,
-                 end_date=None,
-                 timezone: tzinfo | None = None,
-                 jitter=None):
+                 year: int | str | None = None,
+                 month: int | str | None = None,
+                 day: int | str | None = None,
+                 week: int | str | None = None,
+                 day_of_week: int | str | None = None,
+                 hour: int | str | None = None,
+                 minute: int | str | None = None,
+                 second: int | str | None = None,
+                 start_time: DateTimeLike | None = None,
+                 end_time: DateTimeLike | None = None,
+                 timezone: tzinfo | None = None):
         if timezone:
             self.timezone = timezone
-        elif isinstance(start_date, datetime) and start_date.tzinfo:
-            self.timezone = start_date.tzinfo
-        elif isinstance(end_date, datetime) and end_date.tzinfo:
-            self.timezone = end_date.tzinfo
+        elif isinstance(start_time, datetime) and start_time.tzinfo:
+            self.timezone = start_time.tzinfo
+        elif isinstance(end_time, datetime) and end_time.tzinfo:
+            self.timezone = end_time.tzinfo
         else:
             self.timezone = get_localzone()
 
         # self.start_date = convert_to_datetime(start_date, self.timezone, 'start_date')
         # self.end_date = convert_to_datetime(end_date, self.timezone, 'end_date')
-        self.start_date = to_aware_datetime(start_date) if start_date else None
-        self.end_date = to_aware_datetime(end_date) if end_date else None
-
-        self.jitter = jitter
+        self.start_time = to_aware_datetime(start_time) if start_time else None
+        self.end_time = to_aware_datetime(end_time) if end_time else None
 
         values = dict((key, value) for (key, value) in locals().items()
                       if key in self.FIELD_NAMES and value is not None)
@@ -111,8 +88,12 @@ class CronTrigger(Trigger):
         if len(values) != 5:
             raise ValueError('Wrong number of fields; got {}, expected 5'.format(len(values)))
 
-        return cls(minute=values[0], hour=values[1], day=values[2], month=values[3],
-                   day_of_week=values[4], timezone=timezone)
+        return cls(minute=values[0],
+                   hour=values[1],
+                   day=values[2],
+                   month=values[3],
+                   day_of_week=values[4],
+                   timezone=timezone)
 
     def _increment_field_value(self, dateval, fieldnum):
         """
@@ -170,52 +151,46 @@ class CronTrigger(Trigger):
 
         return localize(datetime(**values), self.timezone)
 
-    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool = True):
+    def get_next_fire_time(self, time: DateTimeLike, inclusive: bool):
         time = to_aware_datetime(time)
         if not inclusive:
             time += timedelta.resolution
-        start_date = max(time, self.start_date) if self.start_date else time
+        start_date = max(time, self.start_time) if self.start_time else time
 
         fieldnum = 0
-        next_date = datetime_ceil(start_date).astimezone(self.timezone)
+        next_time = datetime_ceil(start_date).astimezone(self.timezone)
         while 0 <= fieldnum < len(self.fields):
             field = self.fields[fieldnum]
-            curr_value = field.get_value(next_date)
-            next_value = field.get_next_value(next_date)
+            curr_value = field.get_value(next_time)
+            next_value = field.get_next_value(next_time)
 
             if next_value is None:
                 # No valid value was found
-                next_date, fieldnum = self._increment_field_value(next_date, fieldnum - 1)
+                next_time, fieldnum = self._increment_field_value(next_time, fieldnum - 1)
             elif next_value > curr_value:
                 # A valid, but higher than the starting value, was found
                 if field.REAL:
-                    next_date = self._set_field_value(next_date, fieldnum, next_value)
+                    next_time = self._set_field_value(next_time, fieldnum, next_value)
                     fieldnum += 1
                 else:
-                    next_date, fieldnum = self._increment_field_value(next_date, fieldnum)
+                    next_time, fieldnum = self._increment_field_value(next_time, fieldnum)
             else:
                 # A valid value was found, no changes necessary
                 fieldnum += 1
 
             # Return if the date has rolled past the end date
-            if self.end_date and next_date > self.end_date:
+            if self.end_time and next_time >= self.end_time:
                 return None
 
         if fieldnum >= 0:
-            return min(next_date, self.end_date) if self.end_date else next_date
+            return min(next_time, self.end_time) if self.end_time else next_time
 
-    # def __str__(self):
-    #     options = ["%s='%s'" % (f.name, f) for f in self.fields if not f.is_default]
-    #     return 'cron[%s]' % (', '.join(options))
+    def __repr__(self):
+        options = ["%s='%s'" % (f.name, f) for f in self.fields if not f.is_default]
+        if self.start_time:
+            options.append(f"start_date={repr(self.start_time.isoformat(" "))}")
+        if self.end_time:
+            options.append(f"end_date={repr(self.end_time.isoformat(" "))}")
 
-    # def __repr__(self):
-    #     options = ["%s='%s'" % (f.name, f) for f in self.fields if not f.is_default]
-    #     if self.start_date:
-    #         options.append("start_date=%r" % datetime_repr(self.start_date))
-    #     if self.end_date:
-    #         options.append("end_date=%r" % datetime_repr(self.end_date))
-    #     if self.jitter:
-    #         options.append('jitter=%s' % self.jitter)
-
-    #     return "<%s (%s, timezone='%s')>" % (
-    #         self.__class__.__name__, ', '.join(options), self.timezone)
+        return "%s(%s, timezone='%s')" % (
+            self.__class__.__name__, ', '.join(options), self.timezone)

@@ -2,7 +2,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 from typing import Iterable, NamedTuple, Self
 
-from time_utils import CST, DateTimeLike, to_CST_datetime
+from time_utils import DateTimeLike, to_CST_datetime
 from triggers import DateTrigger, Trigger
 
 type ItemInfoLike = ItemInfo | tuple[str, int | float] | str
@@ -218,13 +218,7 @@ class ResourceStats:
         for resource_item in self.resource_items:
             if resource_item.name not in names:
                 continue
-            trigger: Trigger = resource_item.trigger
-            next_fire_time = trigger.get_next_fire_time(start_time, True)
-            print(next_fire_time)
-            while next_fire_time is not None and next_fire_time < end_time:
-                result.extend(resource_item.resources)
-                next_fire_time = trigger.get_next_fire_time(next_fire_time, False)
-                print(next_fire_time)
+            result.extend(resource_item.resources * len(resource_item.trigger.get_all_fire_time(start_time, end_time)))
 
         if combine:
             return result.combine()

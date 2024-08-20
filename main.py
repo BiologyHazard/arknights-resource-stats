@@ -11,9 +11,8 @@ from rewards.reclamation_algorithm import add_reclamation_algorithm_resources
 from rewards.sidestory import (add_吾导先路_复刻_resources, add_将进酒_复刻_resources, add_春分_resources,
                                add_登临意_resources, add_落叶逐火_resources, add_起源行动_resources)
 from rewards.trials_for_navigator import add_trials_for_navigator_resources
-from time_utils import CST
-from triggers.cron import CronTrigger
-from triggers.date import DateTrigger
+from time_utils import CST, to_CST_datetime
+from triggers import CronTrigger
 
 II = ItemInfo
 
@@ -31,18 +30,18 @@ daily_rewards_weekday = "龙门币×500 基础作战记录×3 龙门币×1000 �
 daily_rewards_weekend = "龙门币×500 基础作战记录×3 龙门币×1000 技巧概要·卷1×2 招聘许可×1 基础作战记录×5 龙门币×2000 碳×3 招聘许可×1 初级作战记录×5 合成玉×100 采购凭证×5 家具零件×60 PRTS剿灭代理卡×1 龙门币×6000 中级作战记录×6"
 resource_stats.add(daily_rewards_weekday,
                    "日常任务（三周年之后）（周一至周五）",
-                   CronTrigger(day_of_week="MON-FRI", hour=4, start_date="2022-05-02 04:00:00+08:00", timezone=CST),
+                   CronTrigger(day_of_week="MON-FRI", hour=4, start_time="2022-05-02 04:00:00+08:00", timezone=CST),
                    "#日常任务")
 resource_stats.add(daily_rewards_weekend,
                    "日常任务（三周年之后）（周六至周日）",
-                   CronTrigger(day_of_week="SAT-SUN", hour=4, start_date="2022-05-02 04:00:00+08:00", timezone=CST),
+                   CronTrigger(day_of_week="SAT-SUN", hour=4, start_time="2022-05-02 04:00:00+08:00", timezone=CST),
                    "#日常任务")
 
 # 周常任务
 weekly_rewards = "龙门币×1000 基础作战记录×4 赤金×4 招聘许可×2 龙门币×2000 家具零件×50 初级作战记录×4 技巧概要·卷1×5 龙门币×4000 招聘许可×3 应急理智浓缩液×1 赤金×10 龙门币×6000 招聘许可×5 高级作战记录×4 家具零件×200 合成玉×500 采购凭证×30 资质凭证×20 应急理智浓缩液×1 中级作战记录×4 模组数据块×1 龙门币×10000 高级作战记录×5"
 resource_stats.add(weekly_rewards,
                    "周常任务（三周年之后）",
-                   CronTrigger(day_of_week="MON", hour=4, start_date="2022-05-02 04:00:00+08:00", timezone=CST),
+                   CronTrigger(day_of_week="MON", hour=4, start_time="2022-05-02 04:00:00+08:00", timezone=CST),
                    "#周常任务")
 
 # 每月签到
@@ -102,7 +101,7 @@ commendation_certificate_rewards = [
 ]
 resource_stats.add(commendation_certificate_rewards,
                    "资质凭证区",
-                   CronTrigger(day=1, start_date="2019-05-01 04:00:00+08:00", timezone=CST),
+                   CronTrigger(day=1, start_time="2019-05-01 04:00:00+08:00", timezone=CST),
                    "#资质凭证区")
 
 # 情报凭证区
@@ -116,7 +115,7 @@ add_annihilation_first_clear_resources(resource_stats)
 resource_stats.add(
     "合成玉×1800",
     "剿灭作战每周报酬",
-    CronTrigger(day_of_week="MON", hour=4, start_date="2020-11-02 04:00:00+08:00", timezone=CST),
+    CronTrigger(day_of_week="MON", hour=4, start_time="2020-11-02 04:00:00+08:00", timezone=CST),
     "#剿灭作战每周报酬"
 )
 
@@ -313,7 +312,7 @@ for day_of_month, reward in enumerate(skland_attendance_rewards, start=1):
     resource_stats.add(
         [reward],
         f"森空岛常规签到（每月{day_of_month}日）",
-        CronTrigger(day=day_of_month, hour=0, start_date="2023-09-01 00:00:00+08:00", timezone=CST),
+        CronTrigger(day=day_of_month, hour=0, start_time="2023-09-01 00:00:00+08:00", timezone=CST),
         "#森空岛常规签到",
     )
 for (year, month), rewards in skland_rotating_attendance_rewards.items():
@@ -359,6 +358,7 @@ for date, rewards in first_attendance_rewards:
         "#森空岛首签奖励", "#森空岛签到活动",
     )
 for date, rewards in 冬日签到福利活动_rewards:
+    date = to_CST_datetime(date)
     resource_stats.add(
         rewards,
         f"森空岛冬日签到福利活动（{date.strftime("%Y年%m月%d日")}）",
@@ -366,6 +366,7 @@ for date, rewards in 冬日签到福利活动_rewards:
         "#森空岛冬日签到福利活动", "#森空岛签到活动",
     )
 for date, rewards in 春日签到福利活动_rewards:
+    date = to_CST_datetime(date)
     resource_stats.add(
         rewards,
         f"森空岛春日签到福利活动（{date.strftime("%Y年%m月%d日")}）",
@@ -438,6 +439,7 @@ for date, rewards in 感谢庆典许下心愿_rewards:
         "#森空岛感谢庆典许下心愿活动", "#森空岛活动",
     )
 for date, rewards in 年夜饭_rewards:
+    date = to_CST_datetime(date)
     resource_stats.add(
         rewards,
         f"森空岛年夜饭活动（{date.strftime('%Y年%m月%d日')}）",
@@ -498,8 +500,8 @@ resource_stats.add_tag("#森空岛", ["#森空岛签到", "#森空岛活动"])
 
 
 if __name__ == '__main__':
-    # result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "!#森空岛活动")
-    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "#危机合约合约任务")
+    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "!#森空岛活动")
+    # result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "#危机合约合约任务")
     for name, count in result:
         print(f"{name}: {count}")
     # print(resource_stats.tags)
