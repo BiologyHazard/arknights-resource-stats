@@ -8,8 +8,11 @@ from rewards.intelligence_store import add_intelligence_store_resources
 from rewards.login import add_login_resources
 from rewards.lucky_wall import add_lucky_wall_resources
 from rewards.reclamation_algorithm import add_reclamation_algorithm_resources
-from rewards.sidestory import (add_吾导先路_复刻_resources, add_将进酒_复刻_resources, add_春分_resources,
-                               add_登临意_resources, add_落叶逐火_resources, add_起源行动_resources)
+from rewards.sidestory import (
+    add_2023_愚人节活动_resources, add_吾导先路_复刻_resources, add_四周年庆典_resources, add_孤星_resources,
+    add_将进酒_复刻_resources, add_尖灭测试作战_resources, add_愚人号_复刻_resources, add_春分_resources,
+    add_未来序曲签到活动_resources, add_登临意_resources, add_落叶逐火_resources, add_起源行动_resources
+)
 from rewards.trials_for_navigator import add_trials_for_navigator_resources
 from time_utils import CST, to_CST_datetime
 from triggers import CronTrigger
@@ -150,6 +153,10 @@ add_lucky_wall_resources(resource_stats)
 # 危机合约
 # 起源行动
 add_起源行动_resources(resource_stats)
+
+# 尖灭测试
+# 尖灭测试作战
+add_尖灭测试作战_resources(resource_stats)
 
 # 引航者试炼
 add_trials_for_navigator_resources(resource_stats)
@@ -476,7 +483,7 @@ for date, rewards in 佩佩的礼物_rewards:
     )
 
 resource_stats.add_tag("#剿灭作战", ["#剿灭作战首次通关", "#剿灭作战每周报酬"])
-resource_stats.add_tag("#SideStory", ["SideStory首次通关", "SideStory赠送", "#SideStory商店", "SideStory物资箱"])
+resource_stats.add_tag("#SideStory", ["SideStory首次通关", "SideStory赠送", "#SideStory商店", "SideStory物资箱", "#愚人号宝箱"])
 resource_stats.add_tag("#故事集", [])
 resource_stats.add_tag("#登录活动", [])
 resource_stats.add_tag("#签到活动", [])
@@ -502,7 +509,7 @@ resource_stats.add_tag("#森空岛", ["#森空岛签到", "#森空岛活动"])
 
 if __name__ == '__main__':
     # result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "!#森空岛活动")
-    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "#起源行动")
+    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "#尖灭测试")
     for name, count in result:
         print(f"{name}: {count}")
     # print(resource_stats.tags)

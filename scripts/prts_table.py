@@ -13,7 +13,7 @@ from mwparserfromhell.wikicode import Wikicode
 sys.path.append(".")  # NOQA: E402
 from models import ItemInfo, ItemInfoList
 from scripts.event_start_time import event_start_time
-from scripts.utils import get_event_id_by_name, get_furniture_id_by_name, furniture_to_intelligence_certificate
+from scripts.utils import furniture_to_intelligence_certificate, get_event_id_by_name, get_furniture_id_by_name
 
 
 def get_edit_url(page_name: str) -> str:
@@ -202,8 +202,22 @@ if __name__ == "__main__":
     # event_name = "春分"
     # event_name = "吾导先路2023"
     # event_name = "沙中之火"
-    event_name = "落叶逐火"
+    # event_name = "落叶逐火"
+    # event_name = "愚人号2023"
+    # event_name = "孤星"
+    # event_name = "尖灭测试作战"
+    # event_name = "空想花庭"
+    # event_name = "尘影余音2023"
+    # event_name = "眠于树影之中"
+    # event_name = "绿野幻梦2023"
+    # event_name = "火山旅梦"
+    # event_name = "理想城长夏狂欢季2023"
+    # event_name = "不义之财"
+    # event_name = "亘古长明"
+    # event_name = "叙拉古人2023"
+    event_name = "崔林特尔梅之金"
+
     url = get_edit_url(event_name)
     source = get_prts_source_code(url)
-    # print(parse_milestone(source, "繁荣证章"))
+    # print(parse_milestone(source, "里程碑碎片"))
     print(parse_event_shop(source, event_name))

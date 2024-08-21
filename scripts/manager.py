@@ -32,13 +32,3 @@ class Manager(list[FunctionInfo]):
 
 
 manager = Manager()
-
-# if __name__ == "__main__":
-#     @manager.register(
-#         file_name="zone_record",
-#         function_name="add_zone_record_resources",
-#         import_str="from models import ResourceStats",
-#     )
-#     def f() -> Iterable[Line]:
-#         yield ItemInfoList(), "", "", [], 0, 1
-#     print(manager)

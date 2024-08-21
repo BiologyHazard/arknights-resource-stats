@@ -10,8 +10,10 @@ from models import ItemInfoList  # NOQA: E402
 from scripts.annihilation_rewards import annihilation_rewards  # NOQA: E402
 from scripts.event_mission_rewards import (checkin_only_rewards, event_mission_rewards,  # NOQA: E402
                                            login_only_rewards, pray_only_rewards)
+from scripts.integrated_strategies_rewards import integrated_strategies_rewards  # NOQA: E402
 from scripts.manager import FunctionInfo, Line, manager  # NOQA: E402
 from scripts.trials_for_navigator_rewards import trials_for_navigator_rewards  # NOQA: E402
+from scripts.zone_record_rewards import zone_record_rewards  # NOQA: E402
 from time_utils import DateTimeLike, to_CST_datetime, to_CST_time_str  # NOQA: E402
 
 
@@ -73,74 +75,3 @@ def {function_name}(resource_stats: ResourceStats):
 
 if __name__ == "__main__":
     generate_code()
-#     start = """
-# from models import ResourceStats
-# from time_utils import CST
-# from triggers import CronTrigger, DateTrigger
-
-
-# def add_generated_resources(resource_stats: ResourceStats):
-# """.lstrip()
-
-#     with open("rewards/annihilation.py", "w", encoding="utf-8") as f:
-#         start = '''
-# from models import ResourceStats
-
-
-# def add_annihilation_first_clear_resources(resource_stats: ResourceStats):
-#     """不计理智消耗，不计合成玉报酬"""
-# '''.lstrip()
-#         f.write(start)
-#         f.write(generate_lines(annihilation_rewards()))
-
-#     with open("rewards/check_in.py", "w", encoding="utf-8") as f:
-#         start = '''
-# from models import ResourceStats
-
-
-# def add_check_in_resources(resource_stats: ResourceStats):
-# '''.lstrip()
-#         f.write(start)
-#         f.write(generate_lines(checkin_only_rewards()))
-
-#     with open("rewards/event_mission.py", "w", encoding="utf-8") as f:
-#         start = '''
-# from models import ResourceStats
-
-
-# def add_event_mission_resources(resource_stats: ResourceStats):
-# '''.lstrip()
-#         f.write(start)
-#         f.write(generate_lines(event_mission_rewards()))
-
-#     with open("rewards/login.py", "w", encoding="utf-8") as f:
-#         start = '''
-# from models import ResourceStats
-
-
-# def add_login_resources(resource_stats: ResourceStats):
-# '''.lstrip()
-#         f.write(start)
-#         f.write(generate_lines(login_only_rewards()))
-
-#     with open("rewards/lucky_wall.py", "w", encoding="utf-8") as f:
-#         start = '''
-# from models import ResourceStats
-# from time_utils import CST
-# from triggers import DateTrigger, CronTrigger
-
-
-# def add_lucky_wall_resources(resource_stats: ResourceStats):
-# '''.lstrip()
-#         f.write(start)
-#         f.write(generate_lines(pray_only_rewards()))
-
-#     with open("rewards/trials_for_navigator.py", "w", encoding="utf-8") as f:
-#         start = '''
-# from models import ResourceStats
-
-
-# def add_trials_for_navigator_resources(resource_stats: ResourceStats):
-# '''.lstrip()
-#         f.write(start)
-#         f.write(generate_lines(trails_for_navigator_rewards()))

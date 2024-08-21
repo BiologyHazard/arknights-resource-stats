@@ -21,6 +21,9 @@ with open("ArknightsGameData/zh_CN/gamedata/excel/item_table.json", "r", encodin
 with open("ArknightsGameData/zh_CN/gamedata/excel/replicate_table.json", "r", encoding="utf-8") as f:
     replicate_table = json.load(f)
 
+with open("ArknightsGameData/zh_CN/gamedata/excel/roguelike_topic_table.json", "r", encoding="utf-8") as f:
+    roguelike_topic_table = json.load(f)
+
 with open("ArknightsGameData/zh_CN/gamedata/excel/skin_table.json", "r", encoding="utf-8") as f:
     skin_table = json.load(f)
 

@@ -9,6 +9,7 @@ from time_utils import to_CST_datetime  # NOQA: E402
 
 avatar_dict = {avatar_info["avatarId"]: avatar_info for avatar_info in display_meta_table["playerAvatarData"]["avatarList"]}
 background_dict = {background_info["bgId"]: background_info for background_info in display_meta_table["homeBackgroundData"]["homeBgDataList"]}
+theme_dict = {theme_info["id"]: theme_info for theme_info in display_meta_table["homeBackgroundData"]["themeList"]}
 
 
 class Reward(TypedDict):
@@ -45,6 +46,8 @@ def get_reward_name(reward: Reward) -> str:
         return background_dict[reward_id]["bgName"]
     elif reward_type == "ACT_CART_COMPONENT":
         return activity_table["carData"]["carDict"][reward_id]["name"]
+    elif reward_type == "HOME_THEME":
+        return theme_dict[reward_id]["tmName"]
     else:
         return item_table["items"][reward_id]["name"]
 
@@ -56,10 +59,10 @@ def get_event_name(event_id: str) -> str:
     event_start_timestamp = event_basic_info["startTime"]
     event_start_datetime = to_CST_datetime(event_start_timestamp)
 
-    if (event_type in ("CHECKIN_ONLY", "LOGIN_ONLY")
+    if (event_type in ("CHECKIN_ONLY", "LOGIN_ONLY", "PRAY_ONLY")
             and (name := activity_table["homeActConfig"][event_id]["actTopBarText"])):
         return f"{event_start_datetime.strftime("%Y-%m")} {name}"
-    elif event_type in ("PRAY_ONLY", "BOSS_RUSH"):
+    elif event_type in ("BOSS_RUSH", ):
         return f"{event_start_datetime.strftime("%Y-%m")} {event_name}"
     else:
         return event_name
@@ -68,6 +71,8 @@ def get_event_name(event_id: str) -> str:
 def get_event_id_by_name(name: str) -> str:
     if len(name) > 4 and name[-4:].isdigit():
         name = f"{name[:-4]}·复刻"
+    if name == "理想城长夏狂欢季·复刻":
+        name = "理想城：长夏狂欢季·复刻"
     for event_id, event_basic_info in activity_table["basicInfo"].items():
         if event_basic_info["name"] == name:
             return event_id
