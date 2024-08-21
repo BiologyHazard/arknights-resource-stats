@@ -482,7 +482,8 @@ resource_stats.add_tag("#登录活动", [])
 resource_stats.add_tag("#签到活动", [])
 resource_stats.add_tag("#幸运墙活动", [])
 resource_stats.add_tag("#主线活动", [])
-resource_stats.add_tag("#危机合约", ["#危机合约物资补给", "#危机合约常设兑换所", "#危机合约合约任务"])
+resource_stats.add_tag("#危机合约",
+                       ["#危机合约合约任务", "#危机合约常设兑换所", "#危机合约特设兑换所", "#危机合约物资补给", "#危机合约训练场"])
 resource_stats.add_tag("#愚人节活动", [])
 resource_stats.add_tag("#多维合作", [])
 resource_stats.add_tag("#联锁竞赛", [])
@@ -500,8 +501,8 @@ resource_stats.add_tag("#森空岛", ["#森空岛签到", "#森空岛活动"])
 
 
 if __name__ == '__main__':
-    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "!#森空岛活动")
-    # result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "#危机合约合约任务")
+    # result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "!#森空岛活动")
+    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "#起源行动")
     for name, count in result:
         print(f"{name}: {count}")
     # print(resource_stats.tags)

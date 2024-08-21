@@ -12,7 +12,11 @@ from scripts.utils import (furniture_to_intelligence_certificate,  # NOQA: E402
 from time_utils import to_CST_datetime, to_CST_time_str  # NOQA: E402
 
 
-@manager.register
+@manager.register(
+    file_name="event_mission",
+    function_name="add_event_mission_resources",
+    import_str="from models import ResourceStats",
+)
 def event_mission_rewards() -> Generator[Line, None, None]:
     mission_data_dict = {mission_data["id"]: mission_data for mission_data in activity_table["missionData"]}
 
@@ -45,10 +49,14 @@ def event_mission_rewards() -> Generator[Line, None, None]:
                     intelligence_certificate_count = furniture_to_intelligence_certificate(event_id, reward["id"]) * reward["count"]
                     item_info_list.append_item_info("情报凭证", intelligence_certificate_count)
 
-        yield item_info_list, f"{event_name}任务", event_start_timestamp, ["#活动任务"], 4, 6
+        yield item_info_list, f"{event_name}任务", event_start_timestamp, [f"#{event_name}", "#活动任务"], 4, 6
 
 
-@manager.register
+@manager.register(
+    file_name="login",
+    function_name="add_login_resources",
+    import_str="from models import ResourceStats",
+)
 def login_only_rewards() -> Generator[Line, None, None]:
     assert ([event_id
              for event_id, event_basic_info in activity_table["basicInfo"].items()
@@ -68,7 +76,11 @@ def login_only_rewards() -> Generator[Line, None, None]:
         yield item_info_list, event_name, event_start_timestamp, ["#登录活动"], 4, 6
 
 
-@manager.register
+@manager.register(
+    file_name="check_in",
+    function_name="add_check_in_resources",
+    import_str="from models import ResourceStats",
+)
 def checkin_only_rewards() -> Generator[Line, None, None]:
     assert ([event_id
              for event_id, event_basic_info in activity_table["basicInfo"].items()
@@ -106,7 +118,13 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
             yield item_info_list, event_name, timestamp, ["#签到活动"], 4, 2
 
 
-@manager.register
+@manager.register(
+    file_name="lucky_wall",
+    function_name="add_lucky_wall_resources",
+    import_str="""from models import ResourceStats
+from time_utils import CST
+from triggers import DateTrigger, CronTrigger""",
+)
 def pray_only_rewards() -> Generator[Line, None, None]:
     for event_id, event_basic_info in activity_table["basicInfo"].items():
         if event_basic_info["type"] == "PRAY_ONLY":
@@ -115,11 +133,11 @@ def pray_only_rewards() -> Generator[Line, None, None]:
             event_name = get_event_name(event_id)
             item_info_list = ItemInfoList.new([("合成玉", 8304.13/14)])
             date_str = to_CST_time_str(event_start_datetime.replace(hour=16))
-            start_date_str = to_CST_time_str(event_start_datetime.replace(hour=4) + timedelta(days=1))
-            end_date_str = to_CST_time_str(event_start_datetime.replace(hour=4) + timedelta(days=14))
+            start_time_str = to_CST_time_str(event_start_datetime.replace(hour=4) + timedelta(days=1))
+            end_time_str = to_CST_time_str(event_start_datetime.replace(hour=4) + timedelta(days=14))
             trigger_str = dedent(f"""
-                (DateTrigger({date_str!r})
-                 | CronTrigger(hour=4, start_date={start_date_str!r}, end_date={end_date_str!r}, timezone=CST))
+                DateTrigger({date_str!r})
+                | CronTrigger(hour=4, start_time={start_time_str!r}, end_time={end_time_str!r}, timezone=CST)
                 """).strip("\n")
 
             yield item_info_list, event_name, trigger_str, ["#幸运墙活动"], 4, 6

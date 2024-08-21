@@ -8,7 +8,12 @@ from scripts.excels import building_data, campaign_table, item_table, stage_tabl
 from scripts.manager import Line, manager  # NOQA: E402
 
 
-@manager.register
+@manager.register(
+    file_name="annihilation",
+    function_name="add_annihilation_first_clear_resources",
+    import_str="from models import ResourceStats",
+    comments='"""不计理智消耗，不计合成玉报酬"""',
+)
 def annihilation_rewards() -> Generator[Line, None, None]:
     for campaign in campaign_table["campaigns"].values():
         campaign_name = stage_table["stages"][campaign["stageId"]]["name"]

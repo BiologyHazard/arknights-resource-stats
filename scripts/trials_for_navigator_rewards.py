@@ -7,8 +7,12 @@ from scripts.excels import activity_table, item_table, skin_table  # NOQA: E402
 from scripts.manager import Line, manager  # NOQA: E402
 
 
-@manager.register
-def trails_for_navigator_rewards() -> Generator[Line, None, None]:
+@manager.register(
+    file_name="trials_for_navigator",
+    function_name="add_trials_for_navigator_resources",
+    import_str="from models import ResourceStats",
+)
+def trials_for_navigator_rewards() -> Generator[Line, None, None]:
     # tfn for "trials for navigator"
     for tfn_id, tfn_info in activity_table["activity"]["BOSS_RUSH"].items():
         basic_info = activity_table["basicInfo"][tfn_id]

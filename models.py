@@ -1,6 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Iterable, NamedTuple, Self
+from typing import Iterable, NamedTuple, Self, overload
 
 from time_utils import DateTimeLike, to_CST_datetime
 from triggers import DateTrigger, Trigger
@@ -73,6 +73,14 @@ class ItemInfoList(list[ItemInfo]):
         if isinstance(arg, str):
             return cls.from_str(arg)
         return cls(ItemInfo.new(item) for item in arg)
+
+    @overload
+    def append_item_info(self, item_info: ItemInfoLike, /) -> None:
+        ...
+
+    @overload
+    def append_item_info(self, item_name: str, item_count: int | float, /) -> None:
+        ...
 
     def append_item_info(self, *args) -> None:
         if len(args) == 1:
