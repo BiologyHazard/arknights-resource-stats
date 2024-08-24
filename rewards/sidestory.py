@@ -1,9 +1,11 @@
 from models import ItemInfo as II
 from models import ResourceStats
+from rewards.manager import manager
 from time_utils import CST
 from triggers import CronTrigger, DateTrigger
 
 
+@manager.register
 def add_将进酒_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "罐装晌午茶×-3110 寒芒克洛丝的信物×1 寒芒克洛丝的信物×1 寒芒克洛丝的信物×1 寒芒克洛丝的信物×1 寒芒克洛丝的信物×1 寻访凭证×3 晶体电子单元×1 异铁块×3 白马醇×3 晶体电路×3 情报凭证×200 情报凭证×130 情报凭证×90 情报凭证×180 RMA70-12×5 化合切削液×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 聚酸酯×8 异铁×8 酮凝集×8 狙击芯片×5",
@@ -13,6 +15,7 @@ def add_将进酒_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_登临意_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×13 新酿烈刀子×450",
@@ -34,6 +37,7 @@ def add_登临意_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_春分_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×-114 平安符×560 至纯源石×18 饰牌《接点》×1",
@@ -49,6 +53,7 @@ def add_春分_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_吾导先路_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "蚀刻弹弹壳×-2931 见行者的信物×1 见行者的信物×1 见行者的信物×1 见行者的信物×1 见行者的信物×1 寻访凭证×3 晶体电子单元×1 酮阵列×3 RMA70-24×3 白马醇×3 情报凭证×55 情报凭证×120 情报凭证×120 情报凭证×110 全新装置×5 轻锰矿×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 装置×8 聚酸酯×8 异铁×8 特种芯片×5",
@@ -58,6 +63,7 @@ def add_吾导先路_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_落叶逐火_resources(resource_stats: ResourceStats):
     # 哗啦啦祈愿牌奖励未在解包数据中
     resource_stats.add(
@@ -101,6 +107,7 @@ def add_落叶逐火_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_起源行动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "合约赏金×2040 行动协议×2",
@@ -153,6 +160,7 @@ def add_起源行动_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_第十二章惊霆无声_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×21 至纯源石×2 至纯源石×17 未知材料×1",
@@ -168,6 +176,7 @@ def add_第十二章惊霆无声_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_2023愚人节活动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "U-Official的文件夹×1 "
@@ -183,6 +192,7 @@ def add_2023愚人节活动_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_愚人号_复刻_resources(resource_stats: ResourceStats):
     # 普通关卡不计理智消耗，EX和S关卡计算理智消耗
     resource_stats.add(
@@ -199,6 +209,7 @@ def add_愚人号_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_孤星_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×16 飞行数据记录芯片×530 “电视” “蔓延” 龙门币×40000 中级作战记录×20 特殊作战许可·α×-2 特殊作战许可·β×-2",
@@ -243,6 +254,7 @@ def add_孤星_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_未来序曲签到活动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "林野",
@@ -288,6 +300,7 @@ def add_未来序曲签到活动_resources(resource_stats: ResourceStats):
                        "未来序曲签到活动累计签到第十日", "2023-05-10 04:00:00+08:00", "#未来序曲签到活动", "#签到活动")
 
 
+@manager.register
 def add_四周年庆典_resources(resource_stats: ResourceStats):
     resource_stats.add(
         [II("合成玉", 9000 / 14)],
@@ -322,6 +335,7 @@ def add_四周年庆典_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_尖灭测试作战_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "正义骑士号 Friston-3 模组数据块×3 数据增补条×15 数据增补仪×5",
@@ -412,6 +426,7 @@ def add_尖灭测试作战_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_空想花庭_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×13 圣像碎片×400",
@@ -433,6 +448,7 @@ def add_空想花庭_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_尘影余音_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "乐谱草稿×-3085 车尔尼的信物×1 车尔尼的信物×1 车尔尼的信物×1 车尔尼的信物×1 车尔尼的信物×1 寻访凭证×3 聚合剂×1 酮阵列×3 炽合金块×3 精炼溶剂×3 情报凭证×145 情报凭证×145 情报凭证×105 情报凭证×300 情报凭证×200 异铁组×5 炽合金×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 装置×8 聚酸酯×8 糖×8 重装芯片×5",
@@ -441,6 +457,7 @@ def add_尘影余音_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_2023端阳正午签到活动_resources(resource_stats: ResourceStats):
     # 累计签到第一日：应急理智浓缩液*1、龙门币*30000
     # 累计签到第二日：合成玉*200、加急许可*5
@@ -471,6 +488,7 @@ def add_2023端阳正午签到活动_resources(resource_stats: ResourceStats):
                        "2023端阳正午签到活动累计签到第二日补偿", "2023-06-28 04:00:00+08:00", "#2023端阳正午签到活动", "#签到活动")
 
 
+@manager.register
 def add_宿于繁星合作活动_resources(resource_stats: ResourceStats):
     resource_stats.add("航天模型板件 家具零件×500 中级作战记录×20",  # 具体时间不明
                        "宿于繁星合作活动全平台PV播放量达到50万次", "2023-06-29 16:00:00+08:00", "#宿于繁星合作活动", "#签到活动")
@@ -478,6 +496,7 @@ def add_宿于繁星合作活动_resources(resource_stats: ResourceStats):
                        "宿于繁星合作活动全平台PV播放量达到200万次", "2023-06-29 16:00:00+08:00", "#宿于繁星合作活动", "#签到活动")
 
 
+@manager.register
 def add_眠于树影之中_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×-114 至纯源石×18 指木雕刻×560 饰牌《万有》×1",
@@ -493,6 +512,7 @@ def add_眠于树影之中_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_绿野幻梦_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "神秘试剂×-3067 星源的信物×1 星源的信物×1 星源的信物×1 星源的信物×1 星源的信物×1 寻访凭证×3 烧结核凝晶×1 异铁块×3 切削原液×3 聚合凝胶×3 情报凭证×220 情报凭证×180 情报凭证×170 情报凭证×95 酮凝集组×5 晶体元件×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 固源岩×8 异铁×8 装置×8 术师芯片×5",
@@ -502,6 +522,7 @@ def add_绿野幻梦_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_火山旅梦_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×13 毛茸茸生物的毛×640",
@@ -542,6 +563,7 @@ def add_火山旅梦_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_理想城_长夏狂欢季_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "《奇谈怪论》复印本×1000",
@@ -564,6 +586,7 @@ def add_理想城_长夏狂欢季_复刻_resources(resource_stats: ResourceStats
     )
 
 
+@manager.register
 def add_不义之财_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×12 劣质燃料×480",
@@ -585,6 +608,7 @@ def add_不义之财_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_登览锦绣合作活动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "流石滩立体书堆 家具零件×500 中级作战记录×20",
@@ -600,6 +624,7 @@ def add_登览锦绣合作活动_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_第十三章预热_战备支援_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "龙门币×6000 初级作战记录×15 固源岩×5 固源岩组×2 技巧概要·卷2×5 龙门币×6000 初级作战记录×15 龙门币×8000 五水研磨石×2 聚合凝胶×2 三水锰矿×2 迷城×1 酮阵列×2 白马醇×2 晶体电路×2 烧结核凝晶×1 提纯源岩×2 龙门币×10000 半自然溶剂×2 精炼溶剂×2 化合切削液×2 切削原液×2 龙门币×10000 转质盐组×2 转质盐聚块×2 中级作战记录×10 转质盐组×2 转质盐聚块×2 技巧概要·卷2×10 凝胶×2 烧结核凝晶×1 RMA70-12×3 糖组×3 晶体电子单元×1 全新装置×3 聚酸酯组×3 模组数据块×1 酮凝集组×3 炽合金×3 模组数据块×1",
@@ -609,6 +634,7 @@ def add_第十三章预热_战备支援_resources(resource_stats: ResourceStats)
     )
 
 
+@manager.register
 def add_第十三章恶兆湍流_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×22 至纯源石×19 至纯源石×2 未知材料×1",
@@ -624,6 +650,7 @@ def add_第十三章恶兆湍流_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_纷争演绎_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "龙门币×10000 全新装置×2 中级作战记录×15 龙门币×10000 炽合金×2 D32钢×1 龙门币×10000 RMA70-24×1 技巧概要·卷2×15 龙门币×10000 全新装置×2 中级作战记录×15 龙门币×10000 炽合金×2 模组数据块×1 龙门币×10000 晶体电路×1 技巧概要·卷2×15 龙门币×10000 全新装置×2 D32钢×1 龙门币×10000 炽合金×2 中级作战记录×15 龙门币×10000 全新装置×2 RMA70-24×1 龙门币×10000 全新装置×2 技巧概要·卷2×15 龙门币×10000 中级作战记录×15 炽合金×2 龙门币×10000 晴日×1 技巧概要·卷2×15 龙门币×10000 晶体电路×1 全新装置×2 D32钢×1 龙门币×10000 中级作战记录×15 炽合金×2 龙门币×10000 技巧概要·卷2×15 RMA70-24×1 龙门币×10000 全新装置×2 中级作战记录×15 龙门币×10000 D32钢×1 技巧概要·卷2×15 龙门币×10000 炽合金×2 晶体电路×1 龙门币×5000 龙门币×5000 龙门币×5000 龙门币×5000 龙门币×5000 龙门币×5000 龙门币×5000 龙门币×5000 龙门币×5000 龙门币×5000",
@@ -633,6 +660,7 @@ def add_纷争演绎_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_清光邀月签到活动_resources(resource_stats: ResourceStats):
     # 其他天数的奖励在check_in.py中
     resource_stats.add(
@@ -643,6 +671,7 @@ def add_清光邀月签到活动_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_夜间主题赠送_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "夜间",
@@ -652,6 +681,7 @@ def add_夜间主题赠送_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_叙拉古人_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "进货通行证×-2114 寻访凭证×3 双极纳米片×1 晶体电子单元×1 精炼溶剂×3 炽合金块×3 酮阵列×3 三水锰矿×3 聚合凝胶×3 提纯源岩×3 情报凭证×75 情报凭证×145 情报凭证×165 情报凭证×190 糖组×5 RMA70-12×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 固源岩×8 异铁×8 酮凝集×8 先锋芯片×5",
@@ -661,6 +691,7 @@ def add_叙拉古人_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_崔林特尔梅之金_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×-10 至纯源石×15 调律追忆×640 乐之节符×12 怒之节符×12 哀之节符×12 惧之节符×12",
@@ -701,6 +732,7 @@ def add_崔林特尔梅之金_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_2023感谢庆典_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "采购凭证×-4500 跃跃×5 折光×5",
@@ -722,6 +754,7 @@ def add_2023感谢庆典_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_铁腕城产业合作洽谈会_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "合成玉×462.5",
@@ -757,6 +790,7 @@ def add_铁腕城产业合作洽谈会_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_浊燃作战_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "单刀 浊燃之旗 模组数据块×3 数据增补条×15 数据增补仪×5",
@@ -811,6 +845,7 @@ def add_浊燃作战_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_银心湖列车_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×12 驼兽盲盒×480",
@@ -832,6 +867,7 @@ def add_银心湖列车_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_照我以火_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "手抄歌谣集×-3147 谜图的信物×1 谜图的信物×1 谜图的信物×1 谜图的信物×1 谜图的信物×1 寻访凭证×3 双极纳米片×1 酮阵列×3 聚合凝胶×3 炽合金块×3 情报凭证×80 情报凭证×200 情报凭证×125 情报凭证×235 聚酸酯组×5 轻锰矿×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 固源岩×8 糖×8 装置×8 先锋芯片×5",
@@ -841,6 +877,7 @@ def add_照我以火_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_去咧嘴谷_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×-114 至纯源石×18 辣瓶树水×560 饰牌《尘嚣》×1",
@@ -856,6 +893,7 @@ def add_去咧嘴谷_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_登临意_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "新酿烈刀子×-3224 截云的信物×1 截云的信物×1 截云的信物×1 截云的信物×1 截云的信物×1 寻访凭证×3 D32钢×1 提纯源岩×3 五水研磨石×3 改量装置×3 情报凭证×230 情报凭证×145 情报凭证×120 情报凭证×95 情报凭证×50 RMA70-12×5 异铁组×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 固源岩×8 糖×8 酮凝集×8 狙击芯片×5",
@@ -865,6 +903,7 @@ def add_登临意_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_大地与繁星交汇之际_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "极昼玩偶 漆黑玩偶",
@@ -874,6 +913,7 @@ def add_大地与繁星交汇之际_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_怀黍离_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×14 天桩×450",
@@ -901,6 +941,7 @@ def add_怀黍离_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_2024罗德岛新春签到_resources(resource_stats: ResourceStats):
     # 累计签到第一日：应急理智浓缩液*1、龙门币*30000
     # 累计签到第二日：中级作战记录*20、招聘许可*5
@@ -942,6 +983,7 @@ def add_2024罗德岛新春签到_resources(resource_stats: ResourceStats):
                        "2024罗德岛新春签到新春祝福·大年初九", "2024-02-18 04:00:00+08:00", "#2024罗德岛新春签到", "#签到活动")
 
 
+@manager.register
 def add_水晶箭行动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×12 艺术馆集章卡×410",
@@ -964,6 +1006,7 @@ def add_水晶箭行动_resources(resource_stats: ResourceStats):
     resource_stats.add("决意", "个人名片更换功能上线", "2024-03-07 16:00:00+08:00", "#?")
 
 
+@manager.register
 def add_源石尘行动_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "罗德岛物资配给证书×-3192 战车的信物×1 战车的信物×1 战车的信物×1 战车的信物×1 战车的信物×1 寻访凭证×3 D32钢×1 异铁块×3 五水研磨石×3 白马醇×3 情报凭证×150 情报凭证×150 情报凭证×100 情报凭证×105 情报凭证×75 情报凭证×75 情报凭证×110 情报凭证×130 RMA70-12×5 凝胶×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 装置×8 固源岩×8 异铁×8 近卫芯片×5",
@@ -973,6 +1016,7 @@ def add_源石尘行动_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_潮曦作战_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "从容时刻 潮曦之旗 模组数据块×3 数据增补条×15 数据增补仪×5",
@@ -1030,6 +1074,7 @@ def add_潮曦作战_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_2024愚人节活动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "“给你看点好东西” 至纯源石",
@@ -1039,6 +1084,7 @@ def add_2024愚人节活动_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_巴别塔_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×-10 至纯源石×14 粗制糖块×540",
@@ -1066,6 +1112,7 @@ def add_巴别塔_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_五周年专享活动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "合成玉×200 应急理智加强剂×1",
@@ -1076,6 +1123,7 @@ def add_五周年专享活动_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_第十四章慈悲灯塔_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×23 至纯源石×1 至纯源石×1 至纯源石×18 未知材料×1",
@@ -1109,6 +1157,7 @@ def add_第十四章慈悲灯塔_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_慈悲灯塔活动_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "急性感染抑制剂×2160",
@@ -1131,6 +1180,7 @@ def add_慈悲灯塔活动_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_五周年庆典_resources(resource_stats: ResourceStats):
     resource_stats.add(
         [II("合成玉", 9000 / 14)],
@@ -1173,6 +1223,7 @@ def add_五周年庆典_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_罗德岛促融共竞_resource(resource_stats: ResourceStats):
     resource_stats.add(
         "全新装置×2 龙门币×5000 中级作战记录×5 褐素纤维×2 技巧概要·卷1×10 五水研磨石×1 环烃聚质×2 龙门币×5000 家具零件×100 全新装置×2 龙门币×10000 中级作战记录×10 褐素纤维×2 技巧概要·卷1×10 寻访凭证×1 环烃聚质×2 龙门币×10000 家具零件×100 全新装置×2 数据增补条×15 中级作战记录×10 褐素纤维×2 技巧概要·卷2×5 炽合金块×1 健将×1 龙门币×10000 家具零件×100 环烃聚质×2 数据增补仪×5 中级作战记录×10 烧结核凝晶×1 技巧概要·卷2×5 五水研磨石×1 全新装置×2 双料四分卫×1 家具零件×100 褐素纤维×2 龙门币×10000 高级作战记录×5 环烃聚质×2 技巧概要·卷3×5 炽合金块×1 全新装置×2 龙门币×10000 烧结核凝晶×1",
@@ -1182,6 +1233,7 @@ def add_罗德岛促融共竞_resource(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_孤星_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "龙门币×10000 中级作战记录×10 酮凝集组×3 "
@@ -1208,6 +1260,7 @@ def add_孤星_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_生路_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×-10 至纯源石×13 “应急物资”蓝图芯片×500",
@@ -1229,6 +1282,7 @@ def add_生路_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_2024_端阳正午签到活动_resources(resource_stats: ResourceStats):
     # 累计签到第一日：应急理智浓缩液*1、龙门币*30000
     # 累计签到第二日：合成玉*200、招聘许可*5
@@ -1253,6 +1307,7 @@ def add_2024_端阳正午签到活动_resources(resource_stats: ResourceStats):
                        "2024端阳正午签到活动累计签到第七日", "2024-06-13 04:00:00+08:00", "#2024端阳正午签到活动", "#签到活动")
 
 
+@manager.register
 def add_虹彩茶会_resources(resource_stats: ResourceStats):
     # 全平台播放量达到50万次可获得：家具【田园小沙发】*1、家具零件*500、中级作战记录*20
     # 全平台播放量达到200万次可获得：家具【飞天肉桂卷】*1、龙门币*50000、高级作战记录*30
@@ -1270,6 +1325,7 @@ def add_虹彩茶会_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_空想花庭_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "圣像碎片×-3254 隐现的信物×1 隐现的信物×1 隐现的信物×1 隐现的信物×1 隐现的信物×1 寻访凭证×3 晶体电子单元×1 酮阵列×3 晶体电路×3 改量装置×3 情报凭证×120 情报凭证×115 情报凭证×115 情报凭证×125 情报凭证×165 固源岩组×5 RMA70-12×5 龙门币×100000 高级作战记录×10 中级作战记录×20 初级作战记录×40 技巧概要·卷3×10 技巧概要·卷2×20 固源岩×8 聚酸酯×8 酮凝集×8 狙击芯片×5",
@@ -1279,6 +1335,7 @@ def add_空想花庭_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_熔炉还魂记_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "理智×-114 至纯源石×18 炉渣×560 饰牌《迷梦》",
@@ -1294,6 +1351,7 @@ def add_熔炉还魂记_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_太阳甩在身后_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "至纯源石×13 流光之沙×440",
@@ -1327,6 +1385,7 @@ def add_太阳甩在身后_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_2024夏日嘉年华_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "高级干员调用凭证-新人 十连中坚寻访凭证 寻访凭证 资深干员特训邀请函 资深干员特训装置 高级材料提货券×8",
@@ -1336,6 +1395,7 @@ def add_2024夏日嘉年华_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_火山旅梦_复刻_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "龙门币×3000 半自然溶剂×1 异铁组×1 龙门币×3000 可以游的小矮凳×1 中级作战记录×5 固源岩组×1 龙门币×3000 技巧概要·卷2×5 半自然溶剂×1 龙门币×3000 异铁组×1 中级作战记录×5 炽合金×1 风情街户外圆桌×1 龙门币×3000 异铁组×1 技巧概要·卷3×3 龙门币×4000 炽合金×1 龙门币×4000 固源岩组×1 龙门币×4000 半自然溶剂×1 可以转的大靠椅×1 中级作战记录×5 炽合金×1 技巧概要·卷2×5 龙门币×5000 固源岩组×1 龙门币×5000 炽合金×1 技巧概要·卷3×3 异铁组×1 缤纷冲浪板架×1 半自然溶剂×1 中级作战记录×5 固源岩组×1 龙门币×6000 半自然溶剂×1 中级作战记录×5 龙门币×6000 异铁组×1 炽合金×1 龙门币×6000",
@@ -1352,6 +1412,7 @@ def add_火山旅梦_复刻_resources(resource_stats: ResourceStats):
     )
 
 
+@manager.register
 def add_生息演算限时任务_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "中级作战记录×20 技巧概要·卷2×10 炽合金×5 芯片助剂×1 招聘许可×5 三水锰矿×3 龙门币×30000 赤金×20 晶体电子单元×1 技巧概要·卷3×10 研磨石×5 家具零件×200 夏卉\\sFA083×1 聚合凝胶×3 应急理智浓缩液×1 高级作战记录×10 RMA70-12×5 技巧概要·卷2×10 D32钢×1 龙门币×30000",

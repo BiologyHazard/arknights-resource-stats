@@ -1,11 +1,8 @@
-import sys
+from collections.abc import Generator
 
-sys.path.append(r".")
-from collections.abc import Generator  # NOQA: E402
-
-from models import ItemInfoList  # NOQA: E402
-from scripts.excels import building_data, campaign_table, item_table, stage_table  # NOQA: E402
-from scripts.manager import Line, manager  # NOQA: E402
+from models import ItemInfoList
+from scripts.excels import building_data, campaign_table, item_table, stage_table
+from scripts.manager import Line, manager
 
 
 @manager.register(

@@ -1,10 +1,9 @@
 import sys
 
 sys.path.append(".")  # NOQA: E402
-from models import ItemInfo, ItemInfoList
-from scripts.event_start_time import event_start_time
-from scripts.utils import furniture_to_intelligence_certificate, get_event_id_by_name, get_furniture_id_by_name, get_reward_name
+from models import ItemInfoList
 from scripts.excels import activity_table
+from scripts.utils import get_reward_name
 
 
 def fifth_anniversary_explore_rewards():

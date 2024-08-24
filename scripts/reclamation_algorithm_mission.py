@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append(".")  # NOQA: E402
-from models import ItemInfoList, ItemInfo
+from models import ItemInfoList
 from scripts.excels import activity_table
 from scripts.utils import get_reward_name, Reward
 

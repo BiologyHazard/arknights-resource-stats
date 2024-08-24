@@ -127,9 +127,10 @@ def parse_event_shop(source: str, event_name: str) -> Generator[ItemInfoList, No
 def _get_intelligence_store_node(source: str) -> Tag:
     wikicode: Wikicode = mw.parse(source)
     for node in wikicode.filter_tags(recursive=False):
-        attribute: Attribute = node.get("class")
-        if attribute.value == "wikitable mw-collapsible mw-collapsed":
-            return node
+        if node.tag == "table":
+            attribute: Attribute = node.get("class")
+            if attribute.value == "wikitable mw-collapsible mw-collapsed":
+                return node
     else:
         raise ValueError("Intelligence store not found")
 
@@ -255,7 +256,8 @@ if __name__ == "__main__":
     # event_name = "熔炉“还魂”记"
     event_name = "太阳甩在身后"
 
-    url = get_edit_url(event_name)
-    source = get_prts_source_code(url)
+    # url = get_edit_url(event_name)
+    # source = get_prts_source_code(url)
     # print(parse_milestone(source, "里程碑碎片"))
-    print(*parse_event_shop(source, event_name), sep='\n\n')
+    # print(*parse_event_shop(source, event_name), sep='\n\n')
+    print(parse_intelligence_store(get_prts_source_code(get_edit_url("采购中心/凭证交易所"))))

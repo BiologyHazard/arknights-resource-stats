@@ -1,15 +1,12 @@
-import sys
 from collections.abc import Generator
 from datetime import timedelta
 from textwrap import dedent
 
-sys.path.append(r".")
-from models import ItemInfoList  # NOQA: E402
-from scripts.excels import activity_table  # NOQA: E402
-from scripts.manager import Line, manager  # NOQA: E402
-from scripts.utils import (furniture_to_intelligence_certificate,  # NOQA: E402
-                           get_event_name, get_reward_name, get_reward_type)
-from time_utils import to_CST_datetime, to_CST_time_str  # NOQA: E402
+from models import ItemInfoList
+from scripts.excels import activity_table
+from scripts.manager import Line, manager
+from scripts.utils import furniture_to_intelligence_certificate, get_event_name, get_reward_name, get_reward_type
+from time_utils import to_CST_datetime, to_CST_time_str
 
 
 @manager.register(
