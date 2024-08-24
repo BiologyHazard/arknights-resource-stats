@@ -9,7 +9,9 @@ from scripts.utils import get_reward_name
 @manager.register(
     file_name="zone_record",
     function_name="add_zone_record_resources",
-    import_str="from models import ResourceStats",
+    import_str="""from models import ResourceStats
+
+from .manager import manager""",
 )
 def zone_record_rewards() -> Generator[Line, None, None]:
     for zone_id, zone_data in zone_table["zoneRecordGroupedData"].items():

@@ -10,7 +10,9 @@ from time_utils import to_CST_datetime
 @manager.register(
     file_name="integrated_strategies",
     function_name="add_integrated_strategies_resources",
-    import_str="from models import ResourceStats",
+    import_str="""from models import ResourceStats
+
+from .manager import manager""",
 )
 def integrated_strategies_rewards() -> Generator[Line, None, None]:
     for is_id in roguelike_topic_table["topics"]:

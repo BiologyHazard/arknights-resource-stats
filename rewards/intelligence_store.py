@@ -1,6 +1,9 @@
 from models import ResourceStats
 
+from .manager import manager
 
+
+@manager.register
 def add_intelligence_store_resources(resource_stats: ResourceStats):
     resource_stats.add(
         '情报凭证×-1825 合成玉×2000 龙门币×30000 高级作战记录×20 技巧概要·卷3×20 酮阵列×4 聚酸酯块×4',

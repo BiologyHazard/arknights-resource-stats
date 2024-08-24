@@ -8,7 +8,9 @@ from scripts.manager import Line, manager
 @manager.register(
     file_name="annihilation",
     function_name="add_annihilation_first_clear_resources",
-    import_str="from models import ResourceStats",
+    import_str="""from models import ResourceStats
+
+from .manager import manager""",
     comments='"""不计理智消耗，不计合成玉报酬"""',
 )
 def annihilation_rewards() -> Generator[Line, None, None]:

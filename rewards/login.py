@@ -1,6 +1,9 @@
 from models import ResourceStats
 
+from .manager import manager
 
+
+@manager.register
 def add_login_resources(resource_stats: ResourceStats):
     resource_stats.add(
         '璀璨闪耀寻访凭证×1',

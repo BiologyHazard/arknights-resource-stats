@@ -1,8 +1,10 @@
 from models import ResourceStats
 from time_utils import CST
 from triggers import DateTrigger, CronTrigger
+from .manager import manager
 
 
+@manager.register
 def add_lucky_wall_resources(resource_stats: ResourceStats):
     resource_stats.add(
         '合成玉×593.1521428571428',

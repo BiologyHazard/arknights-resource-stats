@@ -12,7 +12,7 @@ from time_utils import to_CST_datetime, to_CST_time_str
 @manager.register(
     file_name="event_mission",
     function_name="add_event_mission_resources",
-    import_str="from models import ResourceStats",
+    import_str="from models import ResourceStats\nfrom .manager import manager",
 )
 def event_mission_rewards() -> Generator[Line, None, None]:
     mission_data_dict = {mission_data["id"]: mission_data for mission_data in activity_table["missionData"]}
@@ -52,7 +52,7 @@ def event_mission_rewards() -> Generator[Line, None, None]:
 @manager.register(
     file_name="login",
     function_name="add_login_resources",
-    import_str="from models import ResourceStats",
+    import_str="from models import ResourceStats\nfrom .manager import manager",
 )
 def login_only_rewards() -> Generator[Line, None, None]:
     assert ([event_id
@@ -76,7 +76,7 @@ def login_only_rewards() -> Generator[Line, None, None]:
 @manager.register(
     file_name="check_in",
     function_name="add_check_in_resources",
-    import_str="from models import ResourceStats",
+    import_str="from models import ResourceStats\nfrom .manager import manager",
 )
 def checkin_only_rewards() -> Generator[Line, None, None]:
     assert ([event_id
@@ -120,7 +120,9 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
     function_name="add_lucky_wall_resources",
     import_str="""from models import ResourceStats
 from time_utils import CST
-from triggers import DateTrigger, CronTrigger""",
+from triggers import DateTrigger, CronTrigger
+
+from .manager import manager""",
 )
 def pray_only_rewards() -> Generator[Line, None, None]:
     for event_id, event_basic_info in activity_table["basicInfo"].items():

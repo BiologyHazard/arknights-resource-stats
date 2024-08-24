@@ -65,6 +65,7 @@ def generate_code():
         code = f"""{import_str.strip()}
 
 
+@manager.register
 def {function_name}(resource_stats: ResourceStats):
 {comments}{textwrap_indent(generate_lines(function()), " " * 4)}
 """

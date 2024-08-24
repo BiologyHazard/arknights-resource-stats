@@ -2,7 +2,10 @@ from models import ResourceStats
 from triggers import CronTrigger, DateTrigger
 from time_utils import CST
 
+from .manager import manager
 
+
+@manager.register
 def add_limited_gacha_gift_resources(resource_stats: ResourceStats):
     resource_stats.add(
         "【万象伶仃】限定寻访",

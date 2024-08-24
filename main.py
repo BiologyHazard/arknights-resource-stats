@@ -1,30 +1,8 @@
 from datetime import datetime
 
 from models import ItemInfo, ResourceStats
-from rewards.annihilation import add_annihilation_first_clear_resources
-from rewards.check_in import add_check_in_resources
-from rewards.event_mission import add_event_mission_resources
-from rewards.intelligence_store import add_intelligence_store_resources
-from rewards.login import add_login_resources
-from rewards.lucky_wall import add_lucky_wall_resources
-from rewards.reclamation_algorithm import add_沙中之火_resources
-from rewards.sidestory import (
-    add_2023愚人节活动_resources, add_2023感谢庆典_resources, add_2023端阳正午签到活动_resources,
-    add_2024愚人节活动_resources, add_2024罗德岛新春签到_resources, add_不义之财_resources,
-    add_五周年专享活动_resources, add_去咧嘴谷_resources, add_叙拉古人_复刻_resources, add_吾导先路_复刻_resources,
-    add_四周年庆典_resources, add_夜间主题赠送_resources, add_大地与繁星交汇之际_resources, add_孤星_resources,
-    add_宿于繁星合作活动_resources, add_将进酒_复刻_resources, add_尖灭测试作战_resources,
-    add_尘影余音_复刻_resources, add_崔林特尔梅之金_resources, add_巴别塔_resources, add_怀黍离_resources,
-    add_愚人号_复刻_resources, add_春分_resources, add_未来序曲签到活动_resources, add_水晶箭行动_resources,
-    add_浊燃作战_resources, add_清光邀月签到活动_resources, add_源石尘行动_复刻_resources, add_潮曦作战_resources,
-    add_火山旅梦_resources, add_照我以火_复刻_resources, add_理想城_长夏狂欢季_复刻_resources,
-    add_登临意_resources, add_登临意_复刻_resources, add_登览锦绣合作活动_resources, add_眠于树影之中_resources,
-    add_空想花庭_resources, add_第十三章恶兆湍流_resources, add_第十三章预热_战备支援_resources,
-    add_第十二章惊霆无声_resources, add_纷争演绎_resources, add_绿野幻梦_复刻_resources, add_落叶逐火_resources,
-    add_起源行动_resources, add_铁腕城产业合作洽谈会_resources, add_银心湖列车_resources
-)
-from rewards.trials_for_navigator import add_trials_for_navigator_resources
 from time_utils import CST, to_CST_datetime
+from rewards import add_rewards
 from triggers import CronTrigger
 
 II = ItemInfo
@@ -114,74 +92,19 @@ commendation_certificate_rewards = [
 ]
 resource_stats.add(commendation_certificate_rewards,
                    "资质凭证区",
-                   CronTrigger(day=1, start_time="2019-05-01 04:00:00+08:00", timezone=CST),
+                   CronTrigger(day=1, hour=4, start_time="2019-05-01 04:00:00+08:00", timezone=CST),
                    "#资质凭证区")
-
-# 情报凭证区
-add_intelligence_store_resources(resource_stats)
-
-# 剿灭作战
-# 剿灭作战首次通关
-add_annihilation_first_clear_resources(resource_stats)
 
 # 剿灭作战每周报酬
 resource_stats.add(
-    "合成玉×1800",
+    "理智扣除三星通关龙门币×-124 初级作战记录×49 合成玉×1800",
     "剿灭作战每周报酬",
     CronTrigger(day_of_week="MON", hour=4, start_time="2020-11-02 04:00:00+08:00", timezone=CST),
     "#剿灭作战每周报酬"
 )
 
-# 活动
-# 活动任务
-add_event_mission_resources(resource_stats)
-
-# 将进酒·复刻
-add_将进酒_复刻_resources(resource_stats)
-
-# 登临意
-add_登临意_resources(resource_stats)
-
-# 春分
-add_春分_resources(resource_stats)
-
-# 吾导先路·复刻
-add_吾导先路_复刻_resources(resource_stats)
-
-# 落叶逐火
-add_落叶逐火_resources(resource_stats)
-
-# 五周年专享活动
-add_五周年专享活动_resources(resource_stats)
-
-# 登录活动
-add_login_resources(resource_stats)
-
-# 签到活动
-add_check_in_resources(resource_stats)
-
-# 幸运墙活动
-add_lucky_wall_resources(resource_stats)
-
-# 危机合约
-# 起源行动
-add_起源行动_resources(resource_stats)
-
-# 尖灭测试
-# 尖灭测试作战
-add_尖灭测试作战_resources(resource_stats)
-
-# 浊燃作战
-add_浊燃作战_resources(resource_stats)
-
-# 潮曦作战
-add_潮曦作战_resources(resource_stats)
-
-# 引航者试炼
-add_trials_for_navigator_resources(resource_stats)
-
-# 生息演算
-add_沙中之火_resources(resource_stats)
+# 各种奖励
+add_rewards(resource_stats)
 
 # 邮件
 resource_stats.add("高级作战记录×5 应急理智加强剂×1 龙门币×16888",
@@ -543,7 +466,7 @@ resource_stats.add_tag("#森空岛", ["#森空岛签到", "#森空岛活动"])
 
 if __name__ == '__main__':
     # result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", "!#森空岛活动")
-    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00",)
+    result = resource_stats.query("2023-01-01 00:00:00+08:00", "2024-01-01 00:00:00+08:00", )
     for name, count in result:
         print(f"{name}: {count}")
     # print(resource_stats.tags)

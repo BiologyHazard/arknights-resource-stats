@@ -1,6 +1,8 @@
 from models import ResourceStats
+from .manager import manager
 
 
+@manager.register
 def add_check_in_resources(resource_stats: ResourceStats):
     resource_stats.add('应急理智浓缩液×1 龙门币×30000',
                        '2024-08 沉沙赫日签到活动', '2024-08-01 12:00:00+08:00', '#签到活动')

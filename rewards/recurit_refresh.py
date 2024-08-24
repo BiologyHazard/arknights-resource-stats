@@ -1,6 +1,9 @@
 from models import ResourceStats
 
+from .manager import manager
 
+
+@manager.register
 def add_recurit_refresh_resources(resource_stats: ResourceStats):
     resource_stats.add("公开招募刷新×2",
                        "2023春节公开招募刷新", "2023-01-17 16:00:00+08:00", "#公开招募刷新")

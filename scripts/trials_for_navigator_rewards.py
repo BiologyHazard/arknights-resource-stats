@@ -8,7 +8,9 @@ from scripts.manager import Line, manager
 @manager.register(
     file_name="trials_for_navigator",
     function_name="add_trials_for_navigator_resources",
-    import_str="from models import ResourceStats",
+    import_str="""from models import ResourceStats
+
+from .manager import manager""",
 )
 def trials_for_navigator_rewards() -> Generator[Line, None, None]:
     # tfn for "trials for navigator"

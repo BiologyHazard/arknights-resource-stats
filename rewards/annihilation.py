@@ -1,6 +1,8 @@
 from models import ResourceStats
+from .manager import manager
 
 
+@manager.register
 def add_annihilation_first_clear_resources(resource_stats: ResourceStats):
     """不计理智消耗，不计合成玉报酬"""
     resource_stats.add(
