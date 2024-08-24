@@ -34,4 +34,4 @@ def trials_for_navigator_rewards() -> Generator[Line, None, None]:
                 item_name = item_table["items"][item_id]["name"]
             item_info_list.append_item_info(item_name, item_count)
 
-        yield item_info_list, f"{tfn_name}试炼之路", tfn_start_timestamp, [f"#{tfn_name}", "#引航者试炼"], 4, 6
+        yield item_info_list, f"{tfn_name}试炼之路", tfn_start_timestamp, [f"#{tfn_name}", "#引航者试炼"], 6

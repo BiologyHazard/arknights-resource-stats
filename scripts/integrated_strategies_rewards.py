@@ -34,7 +34,7 @@ def integrated_strategies_rewards() -> Generator[Line, None, None]:
                 item_name = get_reward_name(reward)
                 item_info_list.append_item_info(item_name, reward["count"])
                 i += 1
-            yield item_info_list, f"{is_name}里程碑奖励（{update_time.strftime("%Y年%m月")}）", update_timestamp, [f"#{is_name}", "#集成战略里程碑奖励"], 4, 6
+            yield item_info_list, f"{is_name}里程碑奖励（{update_time.strftime("%Y年%m月")}）", update_timestamp, [f"#{is_name}", "#集成战略里程碑奖励"], 6
 
         # 月度奖励
         for month_team_id, month_team_data in is_detail["monthSquad"].items():
@@ -45,7 +45,7 @@ def integrated_strategies_rewards() -> Generator[Line, None, None]:
             for reward in month_team_data["items"]:
                 item_name = get_reward_name(reward)
                 item_info_list.append_item_info(item_name, reward["count"])
-            yield item_info_list, f"{is_name}月度奖励（{update_time.strftime("%Y年%m月")}）", update_timestamp, [f"#{is_name}", "#集成战略月度奖励"], 4, 6
+            yield item_info_list, f"{is_name}月度奖励（{update_time.strftime("%Y年%m月")}）", update_timestamp, [f"#{is_name}", "#集成战略月度奖励"], 6
 
         # 深入调查
         for challenge_id, challenge_data in is_detail["challenges"].items():
@@ -55,4 +55,4 @@ def integrated_strategies_rewards() -> Generator[Line, None, None]:
             for reward in challenge_data["rewards"]:
                 item_name = get_reward_name(reward)
                 item_info_list.append_item_info(item_name, reward["count"])
-            yield item_info_list, f"{is_name}深入调查-{challenge_name}", challenge_timestamp, [f"#{is_name}", "#集成战略深入调查"], 4, 6
+            yield item_info_list, f"{is_name}深入调查-{challenge_name}", challenge_timestamp, [f"#{is_name}", "#集成战略深入调查"], 6

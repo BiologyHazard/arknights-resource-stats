@@ -1,7 +1,6 @@
 import sys
 from collections.abc import Iterable
 from datetime import datetime
-from textwrap import dedent
 from textwrap import indent as textwrap_indent
 from typing import Literal
 
@@ -20,7 +19,6 @@ def generate_line(item_info_list: ItemInfoList,
                   name: str,
                   start_time_or_trigger_str: DateTimeLike | str,
                   tags: list[str],
-                  indent: int,
                   lines: Literal[1, 2, 6]) -> str:
     item_info_list_str = repr(str(item_info_list))
     name_str = repr(name)
@@ -43,11 +41,11 @@ def generate_line(item_info_list: ItemInfoList,
 resource_stats.add(
     {item_info_list_str},
     {name_str},
-{textwrap_indent(start_time_or_trigger_str, "    ")},
+{textwrap_indent(start_time_or_trigger_str, " " * 4)},
     {tags_str},
 )
 """.strip('\n')
-    return textwrap_indent(code, " " * indent)
+    return code
 
 
 def generate_lines(
@@ -62,12 +60,16 @@ def generate_code():
     for function, file_name, function_name, import_str, comments in manager:
         if comments:
             comments = f"    {comments}\n"
+
+        # == code start ==
         code = f"""{import_str.strip()}
 
 
 def {function_name}(resource_stats: ResourceStats):
-{comments}{generate_lines(function())}
+{comments}{textwrap_indent(generate_lines(function()), " " * 4)}
 """
+        # == code end ==
+
         with open(f"rewards/{file_name}.py", "w", encoding="utf-8") as f:
             f.write(code)
 

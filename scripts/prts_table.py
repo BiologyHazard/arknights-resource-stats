@@ -1,8 +1,8 @@
 import re
 import sys
+from collections.abc import Generator
 from datetime import datetime
 from urllib.parse import quote
-from collections.abc import Generator
 
 import mwparserfromhell as mw
 import requests
@@ -14,8 +14,10 @@ from mwparserfromhell.wikicode import Wikicode
 
 sys.path.append(".")  # NOQA: E402
 from models import ItemInfo, ItemInfoList
-from scripts.event_start_time import event_start_time
-from scripts.utils import furniture_to_intelligence_certificate, get_event_id_by_name, get_furniture_id_by_name
+from scripts.manager import Line
+from scripts.utils import (furniture_to_intelligence_certificate, get_event_id_by_name,
+                           get_event_start_timestamp, get_furniture_id_by_name)
+from scripts.generate_code import generate_lines
 
 
 def get_edit_url(page_name: str) -> str:
@@ -127,22 +129,20 @@ def parse_event_shop(source: str, event_name: str) -> Generator[ItemInfoList, No
 def _get_intelligence_store_node(source: str) -> Tag:
     wikicode: Wikicode = mw.parse(source)
     for node in wikicode.filter_tags(recursive=False):
-        if node.tag == "table":
-            attribute: Attribute = node.get("class")
-            if attribute.value == "wikitable mw-collapsible mw-collapsed":
-                return node
+        attribute: Attribute = node.get("class")
+        if attribute.value == "wikitable mw-collapsible mw-collapsed":
+            return node
     else:
         raise ValueError("Intelligence store not found")
 
 
-def parse_intelligence_store(source: str) -> list[tuple[str, ItemInfoList, int, datetime]]:
+def parse_intelligence_store(source: str) -> Generator[Line, None, None]:
     table: Tag = _get_intelligence_store_node(source)
 
     activity_name_regex = r"\[\[.*?\|(.*?)\]\]"
     item_regex = r"\{\{道具图标\|(.+?)\|(\d+)?\|(?:\d+px)?\}\}×(\d+)"
     price_regex = r"\{\{价格\|情报凭证\|(\d+)\}\}"
 
-    intelligence_store: list[tuple[str, ItemInfoList, int, datetime]] = []
     for line in table.contents.nodes[2:]:
         name_match = re.search(activity_name_regex, str(line))
         item_groups = re.findall(item_regex, str(line))
@@ -153,7 +153,7 @@ def parse_intelligence_store(source: str) -> list[tuple[str, ItemInfoList, int, 
             activity_name = "理想城：长夏狂欢季·复刻"
         if activity_name == "玛莉娅·临光 复刻":
             activity_name = "玛莉娅·临光·复刻"
-        start_time = event_start_time[activity_name]
+        start_timestamp = get_event_start_timestamp(get_event_id_by_name(activity_name))
 
         price = int(price_match.group(1))  # type: ignore
 
@@ -164,26 +164,16 @@ def parse_intelligence_store(source: str) -> list[tuple[str, ItemInfoList, int, 
             stock_count = int(stock_count)
             count = unit_count * stock_count
             item_info_list.append_item_info(item_name, count)
+        item_info_list.insert(0, ItemInfo("情报凭证", -price))
 
-        intelligence_store.append((activity_name, item_info_list, price, start_time))
-
-    return intelligence_store
+        yield item_info_list, f"{activity_name}情报凭证区", start_timestamp, ["#情报凭证区"], 6
 
 
 def intelligence_store():
     url = "https://prts.wiki/index.php?title=%E9%87%87%E8%B4%AD%E4%B8%AD%E5%BF%83/%E5%87%AD%E8%AF%81%E4%BA%A4%E6%98%93%E6%89%80&action=edit&section=T-7"
     source = get_prts_source_code(url)
     intelligence_store = parse_intelligence_store(source)
-
-    for activity_name, item_info_list, price, start_time in intelligence_store:
-        s = f"""    resource_stats.add(
-        "情报凭证×-{price} "
-        "{item_info_list}",
-        "{activity_name}情报凭证区",
-        DateTrigger("{start_time}", timezone=CST),
-        "#{activity_name}", "#情报凭证区",
-    )"""
-        print(s)
+    print(generate_lines(intelligence_store))
 
 
 def _get_milestone_node(source: str) -> Template:
@@ -260,4 +250,5 @@ if __name__ == "__main__":
     # source = get_prts_source_code(url)
     # print(parse_milestone(source, "里程碑碎片"))
     # print(*parse_event_shop(source, event_name), sep='\n\n')
-    print(parse_intelligence_store(get_prts_source_code(get_edit_url("采购中心/凭证交易所"))))
+    # print(parse_intelligence_store(get_prts_source_code(get_edit_url("采购中心/凭证交易所"))))
+    intelligence_store()

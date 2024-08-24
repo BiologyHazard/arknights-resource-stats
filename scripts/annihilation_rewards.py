@@ -34,4 +34,4 @@ def annihilation_rewards() -> Generator[Line, None, None]:
                     item_name = item_table["items"][reward["id"]]["name"]
                 campaign_reward.append_item_info(item_name, reward["count"])
 
-        yield campaign_reward, f"{campaign_name}剿灭首次通关", campaign_start_time, ["#剿灭作战首次通关"], 4, 6
+        yield campaign_reward, f"{campaign_name}剿灭首次通关", campaign_start_time, ["#剿灭作战首次通关"], 6

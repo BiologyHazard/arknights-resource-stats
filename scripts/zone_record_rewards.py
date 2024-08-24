@@ -26,4 +26,4 @@ def zone_record_rewards() -> Generator[Line, None, None]:
                 for reward in reward_data["recordReward"] or []:
                     reward_name = get_reward_name(reward)
                     item_info_list.append_item_info(reward_name, reward["count"])
-        yield item_info_list, resource_name, zone_open_time, [f"#{zone_name}", "#主题曲记录点奖励"], 4, 6
+        yield item_info_list, resource_name, zone_open_time, [f"#{zone_name}", "#主题曲记录点奖励"], 6

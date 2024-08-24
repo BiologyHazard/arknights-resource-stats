@@ -46,7 +46,7 @@ def event_mission_rewards() -> Generator[Line, None, None]:
                     intelligence_certificate_count = furniture_to_intelligence_certificate(event_id, reward["id"]) * reward["count"]
                     item_info_list.append_item_info("情报凭证", intelligence_certificate_count)
 
-        yield item_info_list, f"{event_name}任务", event_start_timestamp, [f"#{event_name}", "#活动任务"], 4, 6
+        yield item_info_list, f"{event_name}任务", event_start_timestamp, [f"#{event_name}", "#活动任务"], 6
 
 
 @manager.register(
@@ -70,7 +70,7 @@ def login_only_rewards() -> Generator[Line, None, None]:
             item_name = get_reward_name(reward)
             item_info_list.append_item_info(item_name, reward["count"])
 
-        yield item_info_list, event_name, event_start_timestamp, ["#登录活动"], 4, 6
+        yield item_info_list, event_name, event_start_timestamp, ["#登录活动"], 6
 
 
 @manager.register(
@@ -102,7 +102,7 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
                 item_name = get_reward_name(reward)
                 item_info_list.append_item_info(item_name, reward["count"])
 
-            yield item_info_list, event_name, time, ["#签到活动"], 4, 2
+            yield item_info_list, event_name, time, ["#签到活动"], 2
 
         for extra_check_in_list in event_data["extraCheckinList"] or []:
             timestamp = extra_check_in_list["absolutData"]
@@ -112,7 +112,7 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
                 item_name = get_reward_name(reward)
                 item_info_list.append_item_info(item_name, reward["count"])
 
-            yield item_info_list, event_name, timestamp, ["#签到活动"], 4, 2
+            yield item_info_list, event_name, timestamp, ["#签到活动"], 2
 
 
 @manager.register(
@@ -137,4 +137,4 @@ def pray_only_rewards() -> Generator[Line, None, None]:
                 | CronTrigger(hour=4, start_time={start_time_str!r}, end_time={end_time_str!r}, timezone=CST)
                 """).strip("\n")
 
-            yield item_info_list, event_name, trigger_str, ["#幸运墙活动"], 4, 6
+            yield item_info_list, event_name, trigger_str, ["#幸运墙活动"], 6

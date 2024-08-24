@@ -70,6 +70,12 @@ def get_event_name(event_id: str) -> str:
         return event_name
 
 
+def get_event_start_timestamp(event_id: str) -> int:
+    event_basic_info = activity_table["basicInfo"][event_id]
+    event_start_timestamp = event_basic_info["startTime"]
+    return event_start_timestamp
+
+
 def get_event_id_by_name(name: str) -> str:
     if len(name) > 4 and name[-4:].isdigit():
         name = f"{name[:-4]}·复刻"
