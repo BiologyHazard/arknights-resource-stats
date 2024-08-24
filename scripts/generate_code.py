@@ -7,9 +7,13 @@ from typing import Literal
 sys.path.append(".")  # NOQA: E402
 from models import ItemInfoList
 from scripts.annihilation_rewards import *
+from scripts.check_in_rewards import *
 from scripts.event_mission_rewards import *
 from scripts.integrated_strategies_rewards import *
+from scripts.login_rewards import *
+from scripts.lucky_wall_rewards import *
 from scripts.manager import Line, manager
+from scripts.stationary_security_service_rewards import *
 from scripts.trials_for_navigator_rewards import *
 from scripts.zone_record_rewards import *
 from time_utils import DateTimeLike, to_CST_datetime, to_CST_time_str

@@ -12,6 +12,9 @@ with open("ArknightsGameData/zh_CN/gamedata/excel/campaign_table.json", "r", enc
 with open("ArknightsGameData/zh_CN/gamedata/excel/character_table.json", "r", encoding="utf-8") as f:
     character_table = json.load(f)
 
+with open("ArknightsGameData/zh_CN/gamedata/excel/climb_tower_table.json", "r", encoding="utf-8") as f:
+    climb_tower_table = json.load(f)
+
 with open("ArknightsGameData/zh_CN/gamedata/excel/display_meta_table.json", "r", encoding="utf-8") as f:
     display_meta_table = json.load(f)
 

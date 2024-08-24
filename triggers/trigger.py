@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from collections.abc import Generator
+from collections.abc import Generator, Iterable
 from datetime import datetime
 
 from time_utils import DateTimeLike, to_aware_datetime
@@ -14,10 +14,6 @@ def less_than(a, b, can_equal: bool):
 
 
 class Trigger(ABC):
-    """
-    Abstract base class that defines the interface that every trigger must implement.
-    """
-
     @abstractmethod
     def get_next_fire_time(self, time: DateTimeLike, inclusive: bool) -> datetime | None:
         raise NotImplementedError
@@ -43,11 +39,11 @@ class Trigger(ABC):
         return list(self.iter_fire_time(start_time, end_time, start_inclusive, end_inclusive))
 
     def __or__(self, other) -> OrTrigger:
-        return OrTrigger([self, other])
+        return OrTrigger((self, other))
 
 
 class OrTrigger(Trigger):
-    def __init__(self, triggers: list[Trigger]):
+    def __init__(self, triggers: Iterable[Trigger]):
         self.triggers: list[Trigger] = []
         for trigger in triggers:
             if isinstance(trigger, OrTrigger):
