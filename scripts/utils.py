@@ -48,6 +48,8 @@ def get_reward_name(reward: Reward) -> str:
         return activity_table["carData"]["carDict"][reward_id]["name"]
     elif reward_type == "HOME_THEME":
         return theme_dict[reward_id]["tmName"]
+    elif reward_type == "NAME_CARD_SKIN":
+        return display_meta_table["nameCardV2Data"]["skinData"][reward_id]["name"]
     else:
         return item_table["items"][reward_id]["name"]
 

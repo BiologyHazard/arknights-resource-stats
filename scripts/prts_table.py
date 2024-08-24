@@ -2,10 +2,12 @@ import re
 import sys
 from datetime import datetime
 from urllib.parse import quote
+from collections.abc import Generator
 
 import mwparserfromhell as mw
 import requests
 from bs4 import BeautifulSoup
+from loguru import logger
 from mwparserfromhell.nodes.tag import Attribute, Tag
 from mwparserfromhell.nodes.template import Parameter, Template
 from mwparserfromhell.wikicode import Wikicode
@@ -38,7 +40,7 @@ def _get_event_shop_node(source: str) -> Template:
         raise ValueError("Activity shop not found")
 
 
-def parse_event_shop(source: str, event_name: str) -> ItemInfoList:
+def parse_event_shop(source: str, event_name: str) -> Generator[ItemInfoList, None, None]:
     node = _get_event_shop_node(source)
 
     token_alias_parameter: Parameter = node.get("token_alias")  # type: ignore
@@ -48,38 +50,48 @@ def parse_event_shop(source: str, event_name: str) -> ItemInfoList:
 
     total_price = 0
     item_info_list = ItemInfoList()
+    flag = True
     for line in value.splitlines():
+        # skip empty line
         if not line:
             continue
         splitted = line.split(";;")
-        if line.startswith("X"):  # stage header
-            continue
-            if len(splitted) == 3:
-                _, stage_name, stage_color = splitted
-            elif len(splitted) == 2:
-                _, stage_name = splitted
-                stage_color = None
-            else:
-                raise ValueError(f"Invalid line: {line}")
 
-        elif line.startswith("0") or line.startswith("1"):  # item
-            if len(splitted) == 5:
-                checked, item_name, stock_count, unit_price, item_color = splitted
-            elif len(splitted) == 4:
-                checked, item_name, stock_count, unit_price = splitted
-                item_color = None
-            else:
-                raise ValueError(f"Invalid line: {line}")
+        # stage header
+        if splitted[0] == "X":
+            stage_name = splitted[1]
+            if "往期复刻" in stage_name:
+                flag = False
+            elif "金色阶段" in stage_name:
+                flag = True
+            logger.debug(f"Stage: {mw.parse(stage_name).strip_code()}")
 
+        # item
+        elif splitted[0] in ("0", "1"):
+            item_name = splitted[1]
+            stock_count = splitted[2]
+            unit_price = splitted[3]
+
+            # skip infinite
             if stock_count == "∞":
-                continue  # skip infinite
+                continue
 
-            item_name: Wikicode = mw.parse(item_name)
-            item_name_text = item_name.strip_code().strip().lstrip("link= ")
+            # parse item name
+            item_name_text = mw.parse(item_name).strip_code()
+            item_name_text = item_name_text.strip().lstrip("link= ")
             if item_name_text.startswith("阶段商品"):
                 item_name_text = item_name_text.split("：", 1)[1]
             if "专属时装 " in item_name_text:
                 item_name_text = item_name_text.split("专属时装 ", 1)[1]
+            if re.match(r"[1-6]★\w{2}干员 ", item_name_text) is not None:
+                item_name_text = item_name_text.split("干员 ", 1)[1]
+            if "个人名片主题 " in item_name_text:
+                item_name_text = item_name_text.split("个人名片主题 ", 1)[1]
+
+            # skip replicate
+            if not flag:
+                logger.warning(f"Skip: {item_name_text}")
+                continue
 
             stock_count = int(stock_count)
             unit_price = int(unit_price)
@@ -95,12 +107,21 @@ def parse_event_shop(source: str, event_name: str) -> ItemInfoList:
                 intelligence_certificate_count = furniture_to_intelligence_certificate(event_id, furniture_id) * count
                 item_info_list.append_item_info("情报凭证", intelligence_certificate_count)
 
-        else:  # comment or fold
-            raise NotImplementedError(f"Unknown line: {line}")
+        # comment
+        elif splitted[0] == "C":
+            logger.debug(f"Comment: {mw.parse(line).strip_code()}")
+
+        # fold
+        elif splitted[0].startswith("G"):
+            logger.debug(f"Fold: {mw.parse(line).strip_code()}")
+            if re.match(r"G/\d", line) is not None:
+                item_info_list.insert(0, ItemInfo(token_alias, -total_price))
+                yield item_info_list
+                total_price = 0
+                item_info_list = ItemInfoList()
 
     item_info_list.insert(0, ItemInfo(token_alias, -total_price))
-
-    return item_info_list
+    yield item_info_list
 
 
 def _get_intelligence_store_node(source: str) -> Tag:
@@ -203,6 +224,7 @@ if __name__ == "__main__":
     # event_name = "吾导先路2023"
     # event_name = "沙中之火"
     # event_name = "落叶逐火"
+    # event_name = "危机合约/起源行动"
     # event_name = "愚人号2023"
     # event_name = "孤星"
     # event_name = "尖灭测试作战"
@@ -215,9 +237,25 @@ if __name__ == "__main__":
     # event_name = "不义之财"
     # event_name = "亘古长明"
     # event_name = "叙拉古人2023"
-    event_name = "崔林特尔梅之金"
+    # event_name = "崔林特尔梅之金"
+    # event_name = "危机合约/浊燃作战"
+    # event_name = "银心湖列车"
+    # event_name = "去咧嘴谷"
+    # event_name = "登临意2024"
+    # event_name = "怀黍离"
+    # event_name = "沙洲遗闻"
+    # event_name = "水晶箭行动"
+    # event_name = "源石尘行动2024"
+    # event_name = "危机合约/潮曦作战"
+    # event_name = "巴别塔"
+    # event_name = "慈悲灯塔"
+    # event_name = "孤星2024"
+    # event_name = "生路"
+    # event_name = "空想花庭2024"
+    # event_name = "熔炉“还魂”记"
+    event_name = "太阳甩在身后"
 
     url = get_edit_url(event_name)
     source = get_prts_source_code(url)
     # print(parse_milestone(source, "里程碑碎片"))
-    print(parse_event_shop(source, event_name))
+    print(*parse_event_shop(source, event_name), sep='\n\n')

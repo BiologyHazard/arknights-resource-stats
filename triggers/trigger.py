@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from collections.abc import Generator
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from time_utils import DateTimeLike, to_aware_datetime
 
@@ -40,7 +42,7 @@ class Trigger(ABC):
                           end_inclusive: bool = False) -> list[datetime]:
         return list(self.iter_fire_time(start_time, end_time, start_inclusive, end_inclusive))
 
-    def __or__(self, other) -> 'OrTrigger':
+    def __or__(self, other) -> OrTrigger:
         return OrTrigger([self, other])
 
 

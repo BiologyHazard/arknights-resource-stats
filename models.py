@@ -95,9 +95,9 @@ class ItemInfoList(list[ItemInfo]):
             counter[item.name] += item.count
         return counter
 
-    def combine(self) -> list[ItemInfo]:
+    def combine(self) -> Self:
         counter = self.counter()
-        return [ItemInfo(name, amount) for name, amount in counter.items()]
+        return self.__class__(ItemInfo(name, amount) for name, amount in counter.items())
 
     def combine_in_place(self) -> None:
         counter = self.counter()
