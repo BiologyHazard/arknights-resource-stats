@@ -1,23 +1,9 @@
 import json
 import re
-from datetime import date, datetime
+from datetime import datetime
 
 from scripts.manager import manager
 from models import ItemInfoList
-
-
-def is_制作组通讯(news):
-    return "制作组通讯" in news["title"]
-
-
-def get_datetime_from_date_str(date_str: str):
-    regex = r"(?P<year>\d{4}) // (?P<month>\d{2}) / (?P<day>\d{2})"
-    match = re.match(regex, date_str)
-    assert match is not None, date_str
-    year = int(match.group("year"))
-    month = int(match.group("month"))
-    day = int(match.group("day"))
-    return date(year, month, day)
 
 
 @manager.register(
@@ -28,11 +14,11 @@ from models import ResourceStats
 
 from .manager import manager"""
 )
-def get_dev_news():
+def dev_news_rewards():
     with open("official_websites/news.json", "r", encoding="utf-8") as fp:
         data = json.load(fp)
     for news in data:
-        if not is_制作组通讯(news):
+        if "制作组通讯" not in news["title"]:
             continue
         index_match = re.search(r"#(\d+)", news["title"])
         reward_match = re.search(r"合成玉\s*\*\s*200\s*、?(.+?)\s*\*\s*5", news["body"])
@@ -42,7 +28,7 @@ def get_dev_news():
         assert date_match is not None, news["body"]
         index = int(index_match.group(1))
         reward = reward_match.group(1)
-        date_obj = get_datetime_from_date_str(news["date"])
+        date_obj = datetime.strptime(news["date"], "%Y // %m / %d").date()
         assert date_obj.month == int(date_match.group("month"))
         assert date_obj.day == int(date_match.group("day"))
         datetime_obj = datetime(date_obj.year, date_obj.month, date_obj.day,

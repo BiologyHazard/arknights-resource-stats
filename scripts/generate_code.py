@@ -8,15 +8,15 @@ sys.path.append(".")  # NOQA: E402
 from models import ItemInfoList
 from scripts.annihilation_rewards import *
 from scripts.check_in_rewards import *
+from scripts.dev_news_rewards import *
 from scripts.event_mission_rewards import *
 from scripts.integrated_strategies_rewards import *
 from scripts.login_rewards import *
 from scripts.lucky_wall_rewards import *
-from scripts.manager import Line, manager
+from scripts.manager import Line, manager, RegisterType
 from scripts.stationary_security_service_rewards import *
 from scripts.trials_for_navigator_rewards import *
 from scripts.zone_record_rewards import *
-from scripts.dev_news_rewards import *
 from time_utils import DateTimeLike, to_CST_datetime, to_CST_time_str
 
 
@@ -61,20 +61,25 @@ def generate_lines(
     return join_str.join(lines)
 
 
-def generate_code():
-    for function, file_name, function_name, import_str, comments in manager:
-        if comments:
-            comments = f"    {comments}\n"
+def generate_file(function: RegisterType, function_name: str, import_str: str, comments: str = "") -> str:
+    if comments:
+        comments = f"    {comments}\n"
 
-        # == code start ==
-        code = f"""{import_str.strip()}
+    # == code start ==
+    code = f"""{import_str.strip()}
 
 
 @manager.register
 def {function_name}(resource_stats: ResourceStats):
 {comments}{textwrap_indent(generate_lines(function()), " " * 4)}
 """
-        # == code end ==
+    # == code end ==
+    return code
+
+
+def generate_code():
+    for function, file_name, function_name, import_str, comments in manager:
+        code = generate_file(function, function_name, import_str, comments)
 
         with open(f"rewards/{file_name}.py", "w", encoding="utf-8") as f:
             f.write(code)

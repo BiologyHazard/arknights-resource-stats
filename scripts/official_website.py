@@ -95,11 +95,11 @@ def is_封禁处理公示(news):
 
 
 def is_闪断更新公告(news):
-    return "闪断更新公告" in news["title"]
+    return "闪断更新" in news["title"]
 
 
 def is_临时不停机更新公告(news):
-    return "临时不停机更新公告" in news["title"]
+    return "不停机更新" in news["title"]
 
 
 def is_停机维护(news):
@@ -163,5 +163,5 @@ if __name__ == "__main__":
     # asyncio.run(get_json_main())
     # asyncio.run(get_page_main())
     # get_info_main()
-    # arrange_titles()
-    get_闪断更新补偿()
+    arrange_titles()
+    # get_闪断更新补偿()

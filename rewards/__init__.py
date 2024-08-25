@@ -11,6 +11,7 @@ from .limited_gacha_gift import *
 from .login import *
 from .lucky_wall import *
 from .mail_box import *
+from .maintenance import *
 from .manager import manager
 from .reclamation_algorithm import *
 from .recurit_refresh import *
