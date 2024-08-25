@@ -16,6 +16,7 @@ from scripts.manager import Line, manager
 from scripts.stationary_security_service_rewards import *
 from scripts.trials_for_navigator_rewards import *
 from scripts.zone_record_rewards import *
+from scripts.dev_news_rewards import *
 from time_utils import DateTimeLike, to_CST_datetime, to_CST_time_str
 
 

@@ -3,6 +3,7 @@ from models import ResourceStats
 from .annihilation import *
 from .check_in import *
 from .daily_weekly_monthly import *
+from .dev_news import *
 from .event import *
 from .integrated_strategies import *
 from .intelligence_store import *

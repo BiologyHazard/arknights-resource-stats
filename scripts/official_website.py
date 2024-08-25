@@ -12,7 +12,7 @@ news_api_url = "https://ak.hypergryph.com/api/news"  # ?category={category}&page
 news_url = "https://ak.hypergryph.com/news/{cid}"
 
 categories = ["LATEST", "ANNOUNCEMENT", "ACTIVITY", "NEWS"]
-max_pages = [2, 124, 27, 9]
+max_pages = [2, 125, 27, 9]
 
 
 async def request_and_save_json(category: str, page: int):
@@ -47,6 +47,8 @@ async def get_page_main():
                 obj = json.load(fp)
             for news in obj["data"]["list"]:
                 cid = news["cid"]
+                if Path(f"official_websites/html/news_{cid}.html").exists():
+                    continue
                 tasks.append(request_and_save_page(cid))
     await asyncio.gather(*tasks)
 
@@ -76,7 +78,7 @@ def get_info_main():
                 "url": url,
                 "date": date_text,
                 "category": category_text,
-                "heading": title_text,
+                "title": title_text,
                 "body": body_text,
                 "images": images
             })
@@ -88,34 +90,43 @@ def get_info_main():
     #     fp.write("\n".join(titles))
 
 
+def is_封禁处理公示(news):
+    return "封禁处理公示" in news["title"]
+
+
+def is_闪断更新公告(news):
+    return "闪断更新公告" in news["title"]
+
+
+def is_临时不停机更新公告(news):
+    return "临时不停机更新公告" in news["title"]
+
+
+def is_停机维护(news):
+    return "停机维护" in news["title"]
+
+
+def is_制作组通讯(news):
+    return "制作组通讯" in news["title"]
+
+
+def is_未成年人游戏限时通知(news):
+    return "未成年人游戏限时通知" in news["title"]
+
+
+def is_公开招募标签强制刷新通知(news):
+    return "【公开招募】标签强制刷新通知" in news["title"]
+
+
+def is_新闻(news):
+    return news["category"] == "新闻"
+
+
+def is_活动(news):
+    return news["category"] == "活动"
+
+
 def arrange_titles():
-    def is_封禁处理公示(news):
-        return "封禁处理公示" in news["heading"]
-
-    def is_闪断更新公告(news):
-        return "闪断更新公告" in news["heading"]
-
-    def is_临时不停机更新公告(news):
-        return "临时不停机更新公告" in news["heading"]
-
-    def is_停机维护(news):
-        return "停机维护" in news["heading"]
-
-    def is_制作组通讯(news):
-        return "制作组通讯" in news["heading"]
-
-    def is_未成年人游戏限时通知(news):
-        return "未成年人游戏限时通知" in news["heading"]
-
-    def is_公开招募标签强制刷新通知(news):
-        return "【公开招募】标签强制刷新通知" in news["heading"]
-
-    def is_新闻(news):
-        return news["category"] == "新闻"
-
-    def is_活动(news):
-        return news["category"] == "活动"
-
     with open("official_websites/news.json", "r", encoding="utf-8") as fp:
         data = json.load(fp)
 
@@ -130,7 +141,7 @@ def arrange_titles():
         is_新闻(x),
         is_活动(x),
     ))
-    titles = [f"{x['date']} {x['category']} {x['heading']}" for x in data]
+    titles = [f"{x['date']} {x['category']} {x['title']}" for x in data]
     with open("official_websites/titles.txt", "w", encoding="utf-8") as fp:
         fp.write("\n".join(titles))
 
