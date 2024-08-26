@@ -54,6 +54,18 @@ def get_reward_name(reward: Reward) -> str:
         return item_table["items"][reward_id]["name"]
 
 
+item_name_to_info: dict[str, tuple[str, str]] = {}
+item_name_to_info.update((data["name"], (id, data["itemType"])) for id, data in item_table["items"].items())
+item_name_to_info.update((data["displaySkin"]["skinName"], (id, "CHAR_SKIN")) for id, data in skin_table["charSkins"].items())
+item_name_to_info.update((data["name"], (id, "FURN")) for id, data in building_data["customData"]["furnitures"].items())
+item_name_to_info.update((data["name"], (id, "CHAR")) for id, data in character_table.items())
+item_name_to_info.update((data["avatarItemName"], (id, "PLAYER_AVATAR")) for id, data in avatar_dict.items())
+item_name_to_info.update((data["bgName"], (id, "HOME_BACKGROUND")) for id, data in background_dict.items())
+item_name_to_info.update((data["name"], (id, "ACT_CART_COMPONENT")) for id, data in activity_table["carData"]["carDict"].items())
+item_name_to_info.update((data["tmName"], (id, "HOME_THEME")) for id, data in theme_dict.items())
+item_name_to_info.update((data["name"], (id, "NAME_CARD_SKIN")) for id, data in display_meta_table["nameCardV2Data"]["skinData"].items())
+
+
 def get_event_name(event_id: str) -> str:
     event_basic_info = activity_table["basicInfo"][event_id]
     event_type = event_basic_info["type"]

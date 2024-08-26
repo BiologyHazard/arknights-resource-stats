@@ -229,7 +229,7 @@ class ResourceStats:
               end_time: DateTimeLike,
               *tags_or_names: str,
               combine: bool = True,
-              error_if_not_found: bool = True) -> list[ItemInfo]:
+              error_if_not_found: bool = True) -> ItemInfoList:
         start_time = to_CST_datetime(start_time)
         end_time = to_CST_datetime(end_time)
 
