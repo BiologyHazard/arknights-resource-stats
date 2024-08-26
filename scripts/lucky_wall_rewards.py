@@ -33,4 +33,4 @@ def lucky_wall_rewards() -> Generator[Line, None, None]:
                 | CronTrigger(hour=4, start_time={start_time_str!r}, end_time={end_time_str!r}, timezone=CST)
                 """).strip("\n")
 
-            yield item_info_list, event_name, trigger_str, ["#幸运墙活动"], 6
+            yield item_info_list, event_name, trigger_str, ["#幸运墙"], 6

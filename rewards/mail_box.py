@@ -93,4 +93,4 @@ def add_mail_box_resources(resource_stats: ResourceStats):
     resource_stats.add("合成玉×1000",
                        "好莱坞音乐传媒奖",
                        "2023-11-17 00:00:00+08:00",  # 具体时间不明
-                       "#问卷")
+                       "#邮件")
