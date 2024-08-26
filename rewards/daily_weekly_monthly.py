@@ -14,6 +14,14 @@ def add_daily_weekly_monthly_resources(resource_stats: ResourceStats):
                        CronTrigger(hour=4, timezone=CST),
                        "#理智自动回复")
 
+    # 基建
+    resource_stats.add(
+        "基建工作日",
+        "基建",
+        CronTrigger(hour=4, timezone=CST),
+        "#基建",
+    )
+
     # 日常任务
     resource_stats.add(
         "龙门币×500 基础作战记录×3 龙门币×1000 技巧概要·卷1×2 招聘许可×1 基础作战记录×5 龙门币×2000 碳×3 加急许可×1 初级作战记录×5 合成玉×100 采购凭证×5 家具零件×60 PRTS剿灭代理卡×1 龙门币×6000 中级作战记录×6",
