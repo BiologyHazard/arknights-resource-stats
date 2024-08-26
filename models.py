@@ -1,6 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Iterable, NamedTuple, Self, overload
+from typing import Iterable, NamedTuple, Self, overload, SupportsIndex
 
 from time_utils import DateTimeLike, to_CST_datetime
 from triggers import DateTrigger, Trigger
@@ -109,6 +109,19 @@ class ItemInfoList(list[ItemInfo]):
         if s == f"{cls.__name__}()":
             return cls()
         return cls(ItemInfo.from_str(item_str) for item_str in s.split())
+
+    @overload
+    def __getitem__(self, __i: SupportsIndex) -> ItemInfo:
+        ...
+
+    @overload
+    def __getitem__(self, __s: slice) -> Self:
+        ...
+
+    def __getitem__(self, index: SupportsIndex | slice) -> ItemInfo | Self:
+        if isinstance(index, slice):
+            return self.__class__(super().__getitem__(index))
+        return super().__getitem__(index)
 
     def __str__(self) -> str:
         if not self:

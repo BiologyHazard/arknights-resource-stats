@@ -1,8 +1,9 @@
 from models import ItemInfo as II
 from models import ResourceStats
-from rewards.manager import manager
 from time_utils import CST
 from triggers import CronTrigger, DateTrigger
+
+from .manager import manager
 
 
 @manager.register
@@ -50,6 +51,12 @@ def add_春分_resources(resource_stats: ResourceStats):
         "春分移山庙商店",
         "2023-02-14 16:00:00+08:00",
         "#春分", "#故事集商店",
+    )
+    resource_stats.add(
+        "龙门币×5000 中级作战记录×5 半自然溶剂×2",
+        "春分剧情解锁报酬",
+        "2023-02-24 04:00:00+08:00",
+        "#春分", "#故事集剧情解锁报酬",
     )
 
 
@@ -173,6 +180,12 @@ def add_第十二章惊霆无声_resources(resource_stats: ResourceStats):
         "第十二章惊霆无声绝境作战首次通关",
         "2023-04-13 16:00:00+08:00",
         "#第十二章惊霆无声", "#主题曲首次通关",
+    )
+    resource_stats.add(
+        "龙门币×2000 技巧概要·卷3×5 中级作战记录×15 高级作战记录×10 中级作战记录×20 龙门币×20000 中级作战记录×20 龙门币×20000",
+        "第十二章惊霆无声主线任务",
+        "2023-04-06 16:00:00+08:00",
+        "#第十二章惊霆无声", "#主线任务",
     )
 
 
@@ -510,6 +523,12 @@ def add_眠于树影之中_resources(resource_stats: ResourceStats):
         "2023-07-06 16:00:00+08:00",
         "#眠于树影之中", "#故事集商店",
     )
+    resource_stats.add(
+        "龙门币×5000 中级作战记录×5 化合切削液×2",
+        "眠于树影之中剧情解锁报酬",
+        "2023-07-16 04:00:00+08:00",
+        "#眠于树影之中", "#故事集剧情解锁报酬",
+    )
 
 
 @manager.register
@@ -647,6 +666,12 @@ def add_第十三章恶兆湍流_resources(resource_stats: ResourceStats):
         "第十三章恶兆湍流绝境作战首次通关",
         "2023-10-15 16:00:00+08:00",
         "#第十三章恶兆湍流", "#主题曲首次通关",
+    )
+    resource_stats.add(
+        "龙门币×2000 技巧概要·卷3×5 中级作战记录×15 高级作战记录×10 中级作战记录×20 龙门币×20000 中级作战记录×20 龙门币×20000",
+        "第十三章恶兆湍流主线任务",
+        "2023-10-08 16:00:00+08:00",
+        "#第十三章恶兆湍流", "#主线任务",
     )
 
 
@@ -891,6 +916,12 @@ def add_去咧嘴谷_resources(resource_stats: ResourceStats):
         "2024-01-09 16:00:00+08:00",
         "#去咧嘴谷", "#故事集商店",
     )
+    resource_stats.add(
+        "龙门币×5000 中级作战记录×5 转质盐组×2",
+        "去咧嘴谷剧情解锁报酬",
+        "2024-01-19 04:00:00+08:00",
+        "#去咧嘴谷", "#故事集剧情解锁报酬",
+    )
 
 
 @manager.register
@@ -900,16 +931,6 @@ def add_登临意_复刻_resources(resource_stats: ResourceStats):
         "登临意·复刻商店",
         "2024-01-18 16:00:00+08:00",
         "#登临意·复刻", "#SideStory商店",
-    )
-
-
-@manager.register
-def add_大地与繁星交汇之际_resources(resource_stats: ResourceStats):
-    resource_stats.add(
-        "极昼玩偶 漆黑玩偶",
-        "大地与繁星交汇之际",
-        "2024-02-27 04:00:00+08:00",
-        "#大地与繁星交汇之际", "#邮件", "#网页活动",
     )
 
 
@@ -1155,6 +1176,12 @@ def add_第十四章慈悲灯塔_resources(resource_stats: ResourceStats):
         "2024-05-08 16:00:00+08:00",
         "#第十四章慈悲灯塔",
     )
+    resource_stats.add(
+        "龙门币×2000 技巧概要·卷3×5 中级作战记录×15 高级作战记录×10 中级作战记录×20 龙门币×20000 中级作战记录×20 龙门币×20000",
+        "第十四章慈悲灯塔主线任务",
+        "2024-05-01 16:00:00+08:00",
+        "#第十四章慈悲灯塔",
+    )
 
 
 @manager.register
@@ -1349,6 +1376,12 @@ def add_熔炉还魂记_resources(resource_stats: ResourceStats):
         "2024-07-09 16:00:00+08:00",
         "#熔炉“还魂”记", "#故事集商店",
     )
+    resource_stats.add(
+        "龙门币×5000 中级作战记录×5 褐素纤维×2",
+        "熔炉“还魂”记剧情解锁报酬",
+        "2024-07-19 04:00:00+08:00",
+        "#熔炉“还魂”记", "#故事集剧情解锁报酬",
+    )
 
 
 @manager.register
@@ -1392,6 +1425,18 @@ def add_2024夏日嘉年华_resources(resource_stats: ResourceStats):
         "2024夏日嘉年华新手博士奖励追加",
         "2024-08-01 16:00:00+08:00",
         "#邮件",
+    )
+    resource_stats.add(
+        "合成玉×1400",
+        "2024-08-01新增训练场",
+        "2024-08-01 16:00:00+08:00",
+        "#训练场", "#?",
+    )
+    resource_stats.add(
+        "至纯源石×2",
+        "2024-08-01新增主题曲关卡",
+        "2024-08-01 16:00:00+08:00",
+        "#?",
     )
 
 

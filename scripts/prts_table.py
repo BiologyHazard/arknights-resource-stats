@@ -173,6 +173,8 @@ def intelligence_store():
     url = "https://prts.wiki/index.php?title=%E9%87%87%E8%B4%AD%E4%B8%AD%E5%BF%83/%E5%87%AD%E8%AF%81%E4%BA%A4%E6%98%93%E6%89%80&action=edit&section=T-7"
     source = get_prts_source_code(url)
     intelligence_store = parse_intelligence_store(source)
+    # for line in intelligence_store:
+    #     print(line[1][:-5], *(x[0] for x in line[0][-2:]))
     print(generate_lines(intelligence_store))
 
 
