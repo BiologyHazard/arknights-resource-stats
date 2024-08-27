@@ -1,4 +1,12 @@
 __pycache__
+.vscode
 .venv/
 output/
 official_websites/
+official_weibo/
+temp.csv
+temp.txt
+test.ipynb
+test.py
+test.json
+test.html
