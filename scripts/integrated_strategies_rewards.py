@@ -3,7 +3,7 @@ from collections.abc import Generator
 from models import ItemInfoList
 from scripts.excels import roguelike_topic_table
 from scripts.manager import Line, manager
-from scripts.utils import get_reward_name, Reward
+from scripts.utils import get_reward_item_info_list, Reward
 from time_utils import to_CST_datetime
 
 
@@ -33,8 +33,7 @@ def integrated_strategies_rewards() -> Generator[Line, None, None]:
             while i < len(is_detail["milestones"]) and is_detail["milestones"][i]["level"] <= max_bp_level:
                 milestone = is_detail["milestones"][i]
                 reward = Reward(id=milestone["itemID"], count=milestone["itemCount"], type=milestone["itemType"])
-                item_name = get_reward_name(reward)
-                item_info_list.append_item_info(item_name, reward["count"])
+                item_info_list.extend(get_reward_item_info_list(reward))
                 i += 1
             yield item_info_list, f"{is_name}里程碑奖励（{update_time.strftime("%Y年%m月")}）", update_timestamp, [f"#{is_name}", "#集成战略里程碑奖励"], 6
 
@@ -45,8 +44,7 @@ def integrated_strategies_rewards() -> Generator[Line, None, None]:
             update_time = to_CST_datetime(update_timestamp)
             item_info_list = ItemInfoList()
             for reward in month_team_data["items"]:
-                item_name = get_reward_name(reward)
-                item_info_list.append_item_info(item_name, reward["count"])
+                item_info_list.extend(get_reward_item_info_list(reward))
             yield item_info_list, f"{is_name}月度奖励（{update_time.strftime("%Y年%m月")}）", update_timestamp, [f"#{is_name}", "#集成战略月度奖励"], 6
 
         # 深入调查
@@ -55,6 +53,5 @@ def integrated_strategies_rewards() -> Generator[Line, None, None]:
             challenge_timestamp = is_info["homeEntryDisplayData"][1]["startTs"]
             item_info_list = ItemInfoList()
             for reward in challenge_data["rewards"]:
-                item_name = get_reward_name(reward)
-                item_info_list.append_item_info(item_name, reward["count"])
+                item_info_list.extend(get_reward_item_info_list(reward))
             yield item_info_list, f"{is_name}深入调查-{challenge_name}", challenge_timestamp, [f"#{is_name}", "#集成战略深入调查"], 6

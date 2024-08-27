@@ -246,11 +246,11 @@ if __name__ == "__main__":
     # event_name = "生路"
     # event_name = "空想花庭2024"
     # event_name = "熔炉“还魂”记"
-    event_name = "太阳甩在身后"
+    # event_name = "太阳甩在身后"
+    event_name = "火山旅梦2024"
 
-    # url = get_edit_url(event_name)
-    # source = get_prts_source_code(url)
+    url = get_edit_url(event_name)
+    source = get_prts_source_code(url)
+    print(*parse_event_shop(source, event_name), sep='\n\n')
     # print(parse_milestone(source, "里程碑碎片"))
-    # print(*parse_event_shop(source, event_name), sep='\n\n')
-    # print(parse_intelligence_store(get_prts_source_code(get_edit_url("采购中心/凭证交易所"))))
-    intelligence_store()
+    # intelligence_store()

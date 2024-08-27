@@ -3,7 +3,7 @@ from collections.abc import Generator
 from models import ItemInfoList
 from scripts.excels import activity_table
 from scripts.manager import Line, manager
-from scripts.utils import get_event_name, get_reward_name
+from scripts.utils import get_event_name, get_reward_item_info_list
 
 
 @manager.register(
@@ -26,7 +26,6 @@ def login_only_rewards() -> Generator[Line, None, None]:
 
         item_info_list = ItemInfoList()
         for reward in event_data["itemList"]:
-            item_name = get_reward_name(reward)
-            item_info_list.append_item_info(item_name, reward["count"])
+            item_info_list.extend(get_reward_item_info_list(reward))
 
         yield item_info_list, event_name, event_start_timestamp, ["#登录活动"], 6

@@ -4,7 +4,7 @@ from datetime import timedelta
 from models import ItemInfoList
 from scripts.excels import activity_table
 from scripts.manager import Line, manager
-from scripts.utils import get_event_name, get_reward_name
+from scripts.utils import get_event_name, get_reward_item_info_list
 from time_utils import to_CST_datetime
 
 
@@ -36,8 +36,7 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
 
             item_info_list = ItemInfoList()
             for reward in check_in_list["itemList"]:
-                item_name = get_reward_name(reward)
-                item_info_list.append_item_info(item_name, reward["count"])
+                item_info_list.extend(get_reward_item_info_list(reward))
 
             yield item_info_list, event_name, time, ["#签到活动"], 2
 
@@ -46,7 +45,6 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
 
             item_info_list = ItemInfoList()
             for reward in extra_check_in_list["itemList"]:
-                item_name = get_reward_name(reward)
-                item_info_list.append_item_info(item_name, reward["count"])
+                item_info_list.extend(get_reward_item_info_list(reward))
 
             yield item_info_list, event_name, timestamp, ["#签到活动"], 2

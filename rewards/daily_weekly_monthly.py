@@ -16,10 +16,18 @@ def add_daily_weekly_monthly_resources(resource_stats: ResourceStats):
 
     # 基建
     resource_stats.add(
-        "基建工作日",
+        "基建日",
         "基建",
         CronTrigger(hour=4, timezone=CST),
         "#基建",
+    )
+
+    # 信用交易所
+    resource_stats.add(
+        "信用交易所日",
+        "信用交易所",
+        CronTrigger(hour=4, timezone=CST),
+        "#信用交易所",
     )
 
     # 日常任务

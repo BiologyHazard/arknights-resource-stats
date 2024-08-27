@@ -1,8 +1,9 @@
 from collections.abc import Generator
 
 from models import ItemInfo, ItemInfoList
-from scripts.excels import activity_table, item_table, skin_table
+from scripts.excels import activity_table
 from scripts.manager import Line, manager
+from scripts.utils import get_reward_item_info_list
 
 
 @manager.register(
@@ -27,13 +28,6 @@ def trials_for_navigator_rewards() -> Generator[Line, None, None]:
         item_info_list = ItemInfoList([ItemInfo("试炼经验", -need_point_count)])
         for mile_stone in mile_stone_list:
             reward_item = mile_stone["rewardItem"]
-            item_id = reward_item["id"]
-            item_count = reward_item["count"]
-            item_type = reward_item["type"]
-            if item_type == "CHAR_SKIN":
-                item_name = skin_table["charSkins"][item_id]["displaySkin"]["skinName"]
-            else:
-                item_name = item_table["items"][item_id]["name"]
-            item_info_list.append_item_info(item_name, item_count)
+            item_info_list.extend(get_reward_item_info_list(reward_item))
 
         yield item_info_list, f"{tfn_name}试炼之路", tfn_start_timestamp, [f"#{tfn_name}", "#引航者试炼"], 6

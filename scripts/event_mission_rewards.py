@@ -3,7 +3,8 @@ from collections.abc import Generator
 from models import ItemInfoList
 from scripts.excels import activity_table
 from scripts.manager import Line, manager
-from scripts.utils import furniture_to_intelligence_certificate, get_event_name, get_reward_name, get_reward_type
+from scripts.utils import (furniture_to_intelligence_certificate, get_event_name,
+                           get_reward_item_info_list, get_reward_type)
 
 
 @manager.register(
@@ -30,8 +31,7 @@ def event_mission_rewards() -> Generator[Line, None, None]:
 
         item_info_list = ItemInfoList()
         for reward in mission_group["rewards"] or []:
-            item_name = get_reward_name(reward)
-            item_info_list.append_item_info(item_name, reward["count"])
+            item_info_list.extend(get_reward_item_info_list(reward))
 
         for mission_id in mission_group["missionIds"]:
             mission_data = mission_data_dict[mission_id]
@@ -39,8 +39,7 @@ def event_mission_rewards() -> Generator[Line, None, None]:
                 if reward["count"] == 0:  # "23sreActivity_1" 的 "“鼓声争鸣”" 等的数量为 0
                     continue
                 if not is_replicate or get_reward_type(reward) != "FURN":
-                    item_name = get_reward_name(reward)
-                    item_info_list.append_item_info(item_name, reward["count"])
+                    item_info_list.extend(get_reward_item_info_list(reward))
                 else:  # 复刻活动的家具奖励
                     intelligence_certificate_count = furniture_to_intelligence_certificate(event_id, reward["id"]) * reward["count"]
                     item_info_list.append_item_info("情报凭证", intelligence_certificate_count)

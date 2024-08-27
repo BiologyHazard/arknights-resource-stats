@@ -12,8 +12,8 @@ type ItemInfoListLike = ItemInfoList | Iterable[ItemInfoLike] | str
 def _check_tag_name(tag: str) -> None:
     if not tag.startswith("#"):
         raise ValueError(f"Tag should start with '#': {tag!r}")
-    if tag == "#ALL":
-        raise ValueError(f"Tag should not be '#ALL'")
+    if tag.startswith("##"):
+        raise ValueError(f"Tag should not start with '##': {tag!r}")
 
 
 def _check_name(name: str) -> None:
@@ -162,8 +162,8 @@ class ResourceStats:
         if not isinstance(datetime_or_trigger, Trigger):
             datetime_or_trigger = DateTrigger(to_CST_datetime(datetime_or_trigger))
         self.resource_items.append(ResourceItem(ItemInfoList.new(resources), name, datetime_or_trigger))
-        if name not in self.tags["#ALL"]:
-            self.tags["#ALL"].append(name)
+        if name not in self.tags["##ALL"]:
+            self.tags["##ALL"].append(name)
         for tag in tags:
             _check_tag_name(tag)
             if name not in self.tags[tag]:
@@ -177,45 +177,67 @@ class ResourceStats:
             for tag_or_name in tags_or_names:
                 if tag_or_name not in self.tags[tag]:
                     self.tags[tag].append(tag_or_name)
+        if tag not in self.tags:
+            self.tags[tag] = []
 
     def get_names_by_tag(self,
-                         tag: str,
-                         error_if_not_found: bool = True,
-                         visited: set[str] | None = None,
-                         recur_visited: set[str] | None = None) -> set[str]:
-        if not tag.startswith("#"):  # param 'tag' is actually a name
-            return {tag}
+                         tag_or_name: str,
+                         error_if_not_found: bool = True) -> set[str]:
+        if not tag_or_name.startswith("#"):
+            return {tag_or_name}
 
+        visited: dict[str, set[str]] = {}
+        self._search_tag(visited, tag_or_name, error_if_not_found, set())
+        return visited[tag_or_name]
+
+    def _search_tag(self,
+                    visited: dict[str, set[str]],
+                    tag: str,
+                    error_if_not_found: bool,
+                    recur_visited: set[str]) -> None:
         if error_if_not_found and tag not in self.tags:
             raise ValueError(f"Tag not found: {tag!r}")
-
-        if visited is None:
-            visited = set()
-        if recur_visited is None:
-            recur_visited = set()
 
         if tag in recur_visited:
             raise ValueError(f"Tag cycle detected: {tag!r}")
         if tag in visited:
-            return set()
+            return
 
-        visited.add(tag)
         recur_visited.add(tag)
-        names = set()
-        for tag_or_name in self.tags[tag]:
-            if tag_or_name.startswith("#"):
-                names.update(self.get_names_by_tag(tag_or_name, error_if_not_found, visited, recur_visited))
+        names: set[str] = set()
+        for tag_or_name in self.tags.get(tag, []):  # use get to unnecessary create empty list
+            if not tag_or_name.startswith("!"):
+                if tag_or_name.startswith("#"):
+                    self._search_tag(visited, tag_or_name, error_if_not_found, recur_visited)
+                    names.update(visited[tag_or_name])
+                else:
+                    names.add(tag_or_name)
             else:
-                names.add(tag_or_name)
+                tag_or_name = tag_or_name[1:]
+                if tag_or_name.startswith("#"):
+                    self._search_tag(visited, tag_or_name, error_if_not_found, recur_visited)
+                    names.difference_update(visited[tag_or_name])
+                else:
+                    names.discard(tag_or_name)
         recur_visited.remove(tag)
+        visited[tag] = names
 
-        return names
+    def tags_to_names(self, tags: list[str] | None = None, error_if_not_found: bool = True) -> dict[str, set[str]]:
+        if tags is None:
+            _tags: Iterable[str] = self.tags.keys()
+        else:
+            _tags = tags
+
+        visited: dict[str, set[str]] = {}
+        for tag in _tags:
+            self._search_tag(visited, tag, error_if_not_found, set())
+        return visited
 
     def get_names_by_filter(self,
                             *tags_or_names: str,
                             error_if_not_found: bool = True) -> set[str]:
         if not tags_or_names or tags_or_names[0].startswith("!"):
-            tags_or_names = ("#ALL", ) + tags_or_names
+            tags_or_names = ("##ALL", *tags_or_names)
         names = set()
         for tag_or_name in tags_or_names:
             if not tag_or_name.startswith("!"):
@@ -245,3 +267,42 @@ class ResourceStats:
             return result.combine()
         else:
             return result
+
+    def advanced_query(self,
+                       start_time: DateTimeLike,
+                       end_time: DateTimeLike,
+                       *tags_or_names: str,
+                       error_if_not_found: bool = True) -> defaultdict[str, defaultdict[str, int | float]]:
+        start_time = to_CST_datetime(start_time)
+        end_time = to_CST_datetime(end_time)
+
+        names = self.get_names_by_filter(*tags_or_names, error_if_not_found=error_if_not_found)
+        tags_to_names = self.tags_to_names(None, error_if_not_found)
+
+        result: defaultdict[str, defaultdict[str, int | float]] = defaultdict(lambda: defaultdict(int))
+        for resource_item in self.resource_items:
+            if resource_item.name not in names:
+                continue
+            times = len(resource_item.trigger.get_all_fire_time(start_time, end_time))
+            if times == 0:
+                continue
+            for item_info in resource_item.resources:
+                result[item_info.name][resource_item.name] += item_info.count * times
+
+        for item_name, item_data in result.items():
+            for tag, tag_names in tags_to_names.items():
+                value = sum(item_data[name] for name in tag_names if name in item_data)
+                if value != 0:
+                    item_data[tag] = value
+
+        return result
+
+
+if __name__ == "__main__":
+    rs = ResourceStats()
+    rs.add_tag("#A", ["#B"] * 10000, replace=True)
+    rs.add_tag("#B", ["#C"] * 10000, replace=True)
+    rs.add_tag("#C", ["c", "d", "e"])
+    rs.add_tag("#D", ["d", "e", "f"])
+    rs.add_tag("#E", ["#A", "#B", "#C", "!#D", "g"])
+    print(rs.tags_to_names())

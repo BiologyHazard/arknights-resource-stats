@@ -3,7 +3,7 @@ from collections.abc import Generator
 from models import ItemInfoList
 from scripts.excels import climb_tower_table
 from scripts.manager import Line, manager
-from scripts.utils import get_reward_name
+from scripts.utils import get_reward_item_info_list
 
 
 @manager.register(
@@ -23,7 +23,7 @@ def stationary_security_service_rewards() -> Generator[Line, None, None]:
             item_info_list = ItemInfoList()
             for task_info in tower_data["taskInfo"]:
                 for reward in task_info["rewards"]:
-                    item_info_list.append_item_info(get_reward_name(reward), reward["count"])
+                    item_info_list.extend(get_reward_item_info_list(reward))
             yield item_info_list, f"{tower_name}首次清理记录", season_start_timestamp, ["#保全派驻首次清理记录"], 6
 
     for season_id, mission_group in climb_tower_table["missionGroup"].items():
@@ -35,5 +35,5 @@ def stationary_security_service_rewards() -> Generator[Line, None, None]:
         for mission_id in mission_group["missionIds"]:
             mission_data = climb_tower_table["missionData"][mission_id]
             for reward in mission_data["rewards"]:
-                item_info_list.append_item_info(get_reward_name(reward), reward["count"])
+                item_info_list.extend(get_reward_item_info_list(reward))
         yield item_info_list, f"{season_name}任务", season_start_timestamp, ["#保全派驻任务"], 6
