@@ -71,6 +71,8 @@ def add_skland_attendance_resources(resource_stats: ResourceStats):
         (2024, 7): "晶体元件×1 扭转醇×1 全新装置×1 聚酸酯组×1 重装芯片×1",
         # 2024-08 https://www.skland.com/article?id=2117223
         (2024, 8): "半自然溶剂×1 异铁组×1 糖组×1 酮凝集组×1 狙击芯片×1",
+        # 2024-09 https://www.skland.com/article?id=2213966
+        (2024, 9): "化合切削液×1 凝胶×1 炽合金×1 转质盐组×1 术师芯片×1",
     }
 
     for day_of_month, reward in enumerate(skland_attendance_rewards, start=1):

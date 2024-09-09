@@ -7,6 +7,8 @@ from scripts.manager import Line, manager
 from scripts.utils import get_event_name, get_reward_item_info_list
 from time_utils import to_CST_datetime
 
+numbers = "〇 一 二 三 四 五 六 七 八 九 十 十一 十二 十三 十四 十五 十六 十七 十八 十九 二十 二十一 二十二 二十三 二十四 二十五 二十六 二十七 二十八 二十九 三十 三十一 三十二 三十三 三十四 三十五 三十六 三十七 三十八 三十九 四十 四十一 四十二 四十三 四十四 四十五 四十六 四十七 四十八 四十九 五十".split()
+
 
 @manager.register(
     file_name="check_in",
@@ -38,7 +40,7 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
             for reward in check_in_list["itemList"]:
                 item_info_list.extend(get_reward_item_info_list(reward))
 
-            yield item_info_list, event_name, time, ["#签到活动"], 2
+            yield item_info_list, f"{event_name}第{numbers[day+1]}日", time, [f"#{event_name}", "#常规签到活动"], 2
 
         for extra_check_in_list in event_data["extraCheckinList"] or []:
             timestamp = extra_check_in_list["absolutData"]
@@ -47,4 +49,4 @@ def checkin_only_rewards() -> Generator[Line, None, None]:
             for reward in extra_check_in_list["itemList"]:
                 item_info_list.extend(get_reward_item_info_list(reward))
 
-            yield item_info_list, event_name, timestamp, ["#签到活动"], 2
+            yield item_info_list, f"{event_name}额外", timestamp, [f"#{event_name}", "#常规签到活动"], 2

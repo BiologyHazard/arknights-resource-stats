@@ -54,7 +54,7 @@ def add_daily_weekly_monthly_resources(resource_stats: ResourceStats):
 
     # 剿灭作战每周报酬
     resource_stats.add(
-        "理智×-124 龙门币×1488 初级作战记录×49 合成玉×1800",
+        "理智×-124 龙门币×1240 初级作战记录×49 合成玉×1800",
         "剿灭作战每周报酬",
         CronTrigger(day_of_week="MON", hour=4, start_time="2020-11-02 04:00:00+08:00", timezone=CST),
         "#剿灭作战每周报酬"
